@@ -6,11 +6,16 @@ import org.springframework.ui.Model;
 
 
 @Controller
-public class HomeController {
+public class WebController {
 
 	@GetMapping("/")
-	public String index(Model model) {
+	public String home(Model model) {
 		return "home";
+	}
+
+	@GetMapping("/calendar")
+	public String calendar(Model model) {
+		return "calendar";
 	}
 
 }
