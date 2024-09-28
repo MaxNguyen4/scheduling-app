@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build:css": "npx tailwindcss -i ./styles.css -o ../resources/static/css/tailwind.css --watch"
+    
   },
   "keywords": [],
   "author": "",

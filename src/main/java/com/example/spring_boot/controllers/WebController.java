@@ -32,8 +32,18 @@ public class WebController {
 	@GetMapping("/calendar")
 	public String calendar(Model model, @ModelAttribute("selectedMonth") LocalDate selectedMonth) {
 
+
+		int daysInMonth = selectedMonth.lengthOfMonth();
+		int firstDayOfMonth = selectedMonth.getDayOfWeek().getValue();
+
+		firstDayOfMonth = 3;
+		daysInMonth = 31;
+
+
 		Collection<Event> events = service.getEventForMonth(selectedMonth);
 		model.addAttribute("events", events);
+		model.addAttribute("daysInMonth", daysInMonth);
+		model.addAttribute("firstDayOfMonth", firstDayOfMonth);
 
 		return "calendar";
 	}

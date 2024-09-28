@@ -5,10 +5,10 @@
     <link href="/css/tailwind.css" rel="stylesheet" >
 </head>
 
-<body>
+<body class="p-4">
     
     
-    <h2> Calendar</h2>
+    <h2 class="font-bold text-green-800">Calendar</h2>
 
     <div class="grid grid-cols-7">
 
@@ -18,14 +18,20 @@
         <div> Wednesday: </div>
         <div> Thursday: </div>
         <div> Friday: </div>
+    </div>
 
-        <div th:each="event : ${events}">
-            <p th:text="${event.title}"> </p>
+    <div class="grid grid-cols-7">
 
+        <div th:each="i : ${#numbers.sequence(0, firstDayOfMonth - 1)}">
+            <!-- Empty calendar grids days at end of previous month -->
         </div>
 
-        
-        
+        <div class="border border-green p-4" th:each="day : ${#numbers.sequence(firstDayOfMonth, daysInMonth)}">
+            <p th:text="${day}">Day</p>
+        </div>
+
+
+
     </div>
 
 
