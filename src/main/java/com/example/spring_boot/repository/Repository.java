@@ -6,4 +6,5 @@ import java.time.LocalDate;
 public interface Repository {
     public List<Event> getAllEvents();
     public List<Event> getEventsBetweenDates(LocalDate startDate, LocalDate endDate);
+    
 }

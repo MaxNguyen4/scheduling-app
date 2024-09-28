@@ -30,7 +30,7 @@ public class RepositoryImpl implements Repository {
         return dataSourceBuilder.build();
     }
     
-
+    @Override
     public List<Event> getAllEvents() {
 
         List<Event> events = new ArrayList<Event>();
@@ -63,9 +63,8 @@ public class RepositoryImpl implements Repository {
         return events;
     }
 
-
+    @Override
     public List<Event> getEventsBetweenDates(LocalDate startDate, LocalDate endDate) {
-
         List<Event> events = new ArrayList<Event>();
 
         Date sqlStartDate = Date.valueOf(startDate);

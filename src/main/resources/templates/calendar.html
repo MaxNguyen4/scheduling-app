@@ -18,6 +18,13 @@
         <div> Wednesday: </div>
         <div> Thursday: </div>
         <div> Friday: </div>
+
+        <div th:each="event : ${events}">
+            <p th:text="${event.title}"> </p>
+
+        </div>
+
+        
         
     </div>
 
