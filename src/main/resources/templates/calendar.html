@@ -10,24 +10,32 @@
     
     <h2 class="font-bold text-green-800">Calendar</h2>
 
-    <div class="grid grid-cols-7">
+    <div class="grid grid-cols-7 p-4">
 
-        <div> Sunday: </div>
-        <div> Monday: </div>
-        <div> Tuesday: </div>
-        <div> Wednesday: </div>
-        <div> Thursday: </div>
-        <div> Friday: </div>
-    </div>
+            <!-- Headers -->
+        
+        <div class="pb-2"> Sunday: </div>
+        <div class="pb-2"> Monday: </div>
+        <div class="pb-2"> Tuesday: </div>
+        <div class="pb-2"> Wednesday: </div>
+        <div class="pb-2"> Thursday: </div>
+        <div class="pb-2"> Friday: </div>
+        <div class="pb-2"> Saturday: </div>
 
-    <div class="grid grid-cols-7">
 
-        <div th:each="i : ${#numbers.sequence(0, firstDayOfMonth - 1)}">
             <!-- Empty calendar grids days at end of previous month -->
+        <div th:each="i : ${#numbers.sequence(0, firstDayOfMonth - 1)}">
         </div>
 
-        <div class="border border-green p-4" th:each="day : ${#numbers.sequence(firstDayOfMonth, daysInMonth)}">
+            <!-- Days in Month -->
+        <div class="border border-green p-4 h-36" th:each="day : ${#numbers.sequence(firstDayOfMonth, daysInMonth)}"
+        th:classappend="${day == currentDay} ? 'bg-gray-300' : ''">
             <p th:text="${day}">Day</p>
+
+            <div th:each="event : ${events}" th:if="${event.date.dayOfMonth} == ${day}">
+                <p th:text="${event.title}"></p>
+            </div>
+
         </div>
 
 

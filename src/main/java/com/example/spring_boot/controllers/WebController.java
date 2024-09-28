@@ -21,7 +21,7 @@ public class WebController {
 
 	@ModelAttribute("selectedMonth")
 	public LocalDate selectedMonth() {
-		return LocalDate.now().withDayOfMonth(1).plusMonths(1);
+		return LocalDate.now().plusMonths(1);
 	}
 
 	@GetMapping("/")
@@ -32,15 +32,13 @@ public class WebController {
 	@GetMapping("/calendar")
 	public String calendar(Model model, @ModelAttribute("selectedMonth") LocalDate selectedMonth) {
 
-
+		int currentDay = LocalDate.now().getDayOfMonth();
 		int daysInMonth = selectedMonth.lengthOfMonth();
-		int firstDayOfMonth = selectedMonth.getDayOfWeek().getValue();
-
-		firstDayOfMonth = 3;
-		daysInMonth = 31;
+		int firstDayOfMonth = selectedMonth.withDayOfMonth(1).getDayOfWeek().getValue();
 
 
 		Collection<Event> events = service.getEventForMonth(selectedMonth);
+		model.addAttribute("currentDay", currentDay);
 		model.addAttribute("events", events);
 		model.addAttribute("daysInMonth", daysInMonth);
 		model.addAttribute("firstDayOfMonth", firstDayOfMonth);
