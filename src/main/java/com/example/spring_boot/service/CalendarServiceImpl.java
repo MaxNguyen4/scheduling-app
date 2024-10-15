@@ -3,13 +3,19 @@ package com.example.spring_boot.service;
 import java.util.Collection;
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Service;
+
 import com.example.spring_boot.models.Event;
-import com.example.spring_boot.repository.RepositoryImpl;
+import com.example.spring_boot.repository.CalendarRepositoryImpl;
 
-
-public class ServiceImpl implements Service  {
+@Service
+public class CalendarServiceImpl implements CalendarService  {
     
-    private RepositoryImpl repository = new RepositoryImpl();
+    private final CalendarRepositoryImpl repository;
+
+    public CalendarServiceImpl(CalendarRepositoryImpl repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Collection<Event> getAllEvents() {

@@ -15,19 +15,18 @@ import java.time.LocalTime;
 
 import com.example.spring_boot.models.Event;
 
+import org.springframework.stereotype.Repository;
+
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.datasource.init.UncategorizedScriptException;
 
-public class RepositoryImpl implements Repository {
+@Repository
+public class CalendarRepositoryImpl implements CalendarRepository {
 
-    public DataSource getDataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("org.h2.Driver");
-        dataSourceBuilder.url("jdbc:h2:file:./database/calendar_db");
-        dataSourceBuilder.username("sa");
-        dataSourceBuilder.password("password");
+    private final DataSource dataSource;
 
-        return dataSourceBuilder.build();
+    public CalendarRepositoryImpl(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
     
     @Override
@@ -36,7 +35,7 @@ public class RepositoryImpl implements Repository {
         List<Event> events = new ArrayList<Event>();
 
         try {
-            Connection connection = getDataSource().getConnection();
+            Connection connection = dataSource.getConnection();
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM events");
             ResultSet rs = stmt.executeQuery();
 
@@ -71,11 +70,13 @@ public class RepositoryImpl implements Repository {
         Date sqlEndDate = Date.valueOf(endDate);
 
         try {
-            Connection connection = getDataSource().getConnection();
+            Connection connection = dataSource.getConnection();
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM events WHERE event_date BETWEEN ? AND ?");
             
             stmt.setDate(1, sqlStartDate);
             stmt.setDate(2, sqlEndDate);
+
+            System.out.println(stmt);
 
             ResultSet rs = stmt.executeQuery();
 
