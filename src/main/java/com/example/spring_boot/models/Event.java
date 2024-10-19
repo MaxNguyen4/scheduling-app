@@ -5,15 +5,17 @@ import java.time.LocalDate;
 
 public class Event {
 
-    private int id;
+    private Long id;
+    private Long userId;
     private String title;
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
     private String details;
 
-    public Event(int id, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String details) {
+    public Event(Long id, Long userId, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String details) {
         this.id = id;
+        this.userId = userId;
         this.title = title;
         this.date = date;
         this.startTime = startTime;
@@ -24,8 +26,12 @@ public class Event {
     public Event(){
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setTitle(String title) {
@@ -48,8 +54,12 @@ public class Event {
         this.details = details;
     }
 
-    public int getId() {
+    public Long getId() {
         return this.id;
+    }
+
+    public Long getUserId() {
+        return this.userId;
     }
 
     public String getTitle() {

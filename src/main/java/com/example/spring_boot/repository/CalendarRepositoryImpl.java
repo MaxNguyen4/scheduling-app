@@ -40,14 +40,15 @@ public class CalendarRepositoryImpl implements CalendarRepository {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                int id = rs.getInt(1);
-                String title = rs.getString(2);
-                LocalDate date = rs.getDate(3).toLocalDate();
-                LocalTime startTime = rs.getTime(4).toLocalTime();
-                LocalTime endTime = rs.getTime(5).toLocalTime();
-                String details = rs.getString(6);
+                Long id = rs.getLong(1);
+                Long userId = rs.getLong(2);
+                String title = rs.getString(3);
+                LocalDate date = rs.getDate(4).toLocalDate();
+                LocalTime startTime = rs.getTime(5).toLocalTime();
+                LocalTime endTime = rs.getTime(6).toLocalTime();
+                String details = rs.getString(7);
 
-                Event event = new Event(id, title, date, startTime, endTime, details);
+                Event event = new Event(id, userId, title, date, startTime, endTime, details);
                 events.add(event);
             }
             
@@ -81,14 +82,15 @@ public class CalendarRepositoryImpl implements CalendarRepository {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                int id = rs.getInt(1);
-                String title = rs.getString(2);
-                LocalDate date = rs.getDate(3).toLocalDate();
-                LocalTime startTime = rs.getTime(4).toLocalTime();
-                LocalTime endTime = rs.getTime(5).toLocalTime();
-                String details = rs.getString(6);
+                Long id = rs.getLong(1);
+                Long userId = rs.getLong(2);
+                String title = rs.getString(3);
+                LocalDate date = rs.getDate(4).toLocalDate();
+                LocalTime startTime = rs.getTime(5).toLocalTime();
+                LocalTime endTime = rs.getTime(6).toLocalTime();
+                String details = rs.getString(7);
 
-                Event event = new Event(id, title, date, startTime, endTime, details);
+                Event event = new Event(id, userId, title, date, startTime, endTime, details);
                 events.add(event);
             }
 

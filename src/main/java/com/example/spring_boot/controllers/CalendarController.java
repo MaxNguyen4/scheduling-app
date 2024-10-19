@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.spring_boot.models.Event;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.Collection;
 
 import com.example.spring_boot.service.*;
@@ -48,6 +49,7 @@ public class CalendarController {
 
 		int daysInMonth = selectedMonth.lengthOfMonth();
 		int firstDayOfMonth = selectedMonth.withDayOfMonth(1).getDayOfWeek().getValue();
+		String monthName = selectedMonth.getMonth().toString();
 
 		Collection<Event> events = service.getEventForMonth(selectedMonth);
 		model.addAttribute("selectedMonth", selectedMonth);
@@ -56,8 +58,14 @@ public class CalendarController {
 		model.addAttribute("daysInMonth", daysInMonth);
 		model.addAttribute("firstDayOfMonth", firstDayOfMonth);
 		model.addAttribute("monthOffset", monthOffset);
+		model.addAttribute("monthName", monthName);
 
 		return "calendar";
+	}
+
+	@GetMapping("/event/{eventId}")
+	public String event(Model model, @PathVariable Long eventId) {
+		return "hello";
 	}
 
 }
