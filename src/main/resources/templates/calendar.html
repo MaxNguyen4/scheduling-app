@@ -8,11 +8,22 @@
 <body class="p-4">
     
     
-    <h2 class="font-bold text-orange-400">Calendar</h2>
+    <h2 class="font-bold text-purple-400">Calendar</h2>
+
+
+    <div>
+
+        <a th:href="@{/calendar/{monthOffset}(monthOffset=${monthOffset - 1})}">
+            <button type="button">Previous Month</button>
+        </a>
+        <a th:href="@{/calendar/{monthOffset}(monthOffset=${monthOffset + 1})}">
+            <button type="button">Next Month</button>
+        </a>
+        
+    </div>
+
 
     <div class="grid grid-cols-7 p-4">
-
-            <!-- Headers -->
         
         <div class="pb-2"> Sunday: </div>
         <div class="pb-2"> Monday: </div>
@@ -23,14 +34,12 @@
         <div class="pb-2"> Saturday: </div>
 
 
-            <!-- Empty calendar grids days at end of previous month -->
         <div th:each="i : ${#numbers.sequence(0, firstDayOfMonth - 1)}">
         </div>
 
-            <!-- Days in Month -->
-        <div class="border border-green p-4 h-36" th:each="day : ${#numbers.sequence(firstDayOfMonth, daysInMonth)}"
+        <div class="border border-green p-4 h-36" th:each="day : ${#numbers.sequence(1, daysInMonth)}"
         th:classappend="${day == currentDay} ? 'bg-gray-300' : ''">
-            <p th:text="${day}">Day</p>
+            <p th:text="${day}"></p>
 
             <div th:each="event : ${events}" th:if="${event.date.dayOfMonth} == ${day}">
                 <p th:text="${event.title}"></p>
