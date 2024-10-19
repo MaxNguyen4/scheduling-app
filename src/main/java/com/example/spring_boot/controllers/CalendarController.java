@@ -65,7 +65,11 @@ public class CalendarController {
 
 	@GetMapping("/event/{eventId}")
 	public String event(Model model, @PathVariable Long eventId) {
-		return "hello";
+
+		Event event = service.getEvent(eventId);
+
+		model.addAttribute("event", event);
+		return "event";
 	}
 
 }

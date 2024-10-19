@@ -105,5 +105,44 @@ public class CalendarRepositoryImpl implements CalendarRepository {
         return events;
     }
 
+    @Override
+    public Event getEvent(Long eventId) {
+
+        Event event = null;
+
+        try {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM events WHERE event_id = ?");
+            
+            stmt.setLong(1, eventId);
+
+            System.out.println(stmt);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Long id = rs.getLong(1);
+                Long userId = rs.getLong(2);
+                String title = rs.getString(3);
+                LocalDate date = rs.getDate(4).toLocalDate();
+                LocalTime startTime = rs.getTime(5).toLocalTime();
+                LocalTime endTime = rs.getTime(6).toLocalTime();
+                String details = rs.getString(7);
+
+                event = new Event(id, userId, title, date, startTime, endTime, details);
+                return event;
+            }
+
+            rs.close();
+            stmt.close();
+            connection.close();
+
+        } catch (SQLException e) {
+            throw new UncategorizedScriptException("Error in getEvent" + e.getMessage(), e);
+        }
+
+        return event;
+    }
+
 }
     

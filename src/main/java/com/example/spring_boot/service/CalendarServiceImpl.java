@@ -37,5 +37,10 @@ public class CalendarServiceImpl implements CalendarService  {
         return repository.getEventsBetweenDates(startDate, endDate);
     }
 
+    @Override
+    public Event getEvent(Long eventId) {
+        return repository.getEvent(eventId);
+    }
+
 
 }
