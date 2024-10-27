@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 @Controller
 public class WebController {
 
-	@GetMapping("/")
+	@GetMapping("/user")
 	public String home(Model model) {
 		return "home";
 	}

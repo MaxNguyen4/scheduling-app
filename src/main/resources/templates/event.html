@@ -1,13 +1,45 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:inline="text">
 <head>
     <meta charset="utf-8" content="width=device-width, initial-scale=1.0"> 
     <link href="/css/tailwind.css" rel="stylesheet" >
 </head>
 
-<body>
-    <p>
-        <p>Event title: [[${event.title}]]</p>
+<body class="flex justify-center items-center min-h-screen bg-gray-100 w-full">
+    <div class="bg-white p-6 rounded-lg shadow-md w-9/12">
+
+        <form th:action="@{/}" th:object="${event}" method="post">
+
+        <div>
+            <h2 class="text-2xl font-bold mb-4">
+                <input class="border border-gray-300 p-2 rounded-md shadow-sm block w-auto" type="text" th:field="*{title}">
+            </h2>
+        </div>
+
+        <div class="flex">
+
+            <input id="startTime" class="p-2 block w-32 border border-gray-300 rounded-md shadow-sm" type="time" th:field="*{startTime}"> 
+            <p class="font-bold p-2" > - </p>
+            <input class="p-2 block w-32 border border-gray-300 rounded-md shadow-sm" type="time" th:field="*{endTime}"> 
+
+            <div class="flex-grow flex justify-end">
+            <p th:text="*{date}" class="p-2 border border-gray-300 rounded-md shadow-sm w-32" > </p>
+            </div>
+
+        </div>
+
+        <div>
+            <textarea class="border border-gray-300 p-2 rounded-md shadow-sm w-full mt-4" rows="15" th:field="*{details}" > </textarea>
+            
+        </div>
+
+        
+        
+        </form>
+    </div>
+
+
+
         
     </p>
 </body>

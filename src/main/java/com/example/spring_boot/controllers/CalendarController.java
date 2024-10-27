@@ -19,7 +19,7 @@ import java.util.Collection;
 import com.example.spring_boot.service.*;
 
 @Controller
-@RequestMapping("/calendar")
+@RequestMapping("/")
 public class CalendarController {
 
     private final CalendarServiceImpl service;
@@ -34,10 +34,10 @@ public class CalendarController {
         return newMonth(model, 0);
     }
 
-	@GetMapping("/{monthOffset}")
+	@GetMapping("calendar/{monthOffset}")
 	public String newMonth(Model model, @PathVariable int monthOffset) {
 
-		LocalDate selectedMonth = LocalDate.now().plusMonths(monthOffset);
+		LocalDate localDate = LocalDate.now().plusMonths(monthOffset);
 		int currentDay;
 
 		if (monthOffset == 0) {
@@ -47,29 +47,33 @@ public class CalendarController {
 			currentDay = 32;
 		}
 
-		int daysInMonth = selectedMonth.lengthOfMonth();
-		int firstDayOfMonth = selectedMonth.withDayOfMonth(1).getDayOfWeek().getValue();
-		String monthName = selectedMonth.getMonth().toString();
+		int daysInMonth = localDate.lengthOfMonth();
+		int firstDayOfMonth = localDate.withDayOfMonth(1).getDayOfWeek().getValue();
 
-		Collection<Event> events = service.getEventForMonth(selectedMonth);
-		model.addAttribute("selectedMonth", selectedMonth);
+		Collection<Event> events = service.getEventForMonth(localDate);
+		model.addAttribute("localDate", localDate);
 		model.addAttribute("currentDay", currentDay);
 		model.addAttribute("events", events);
 		model.addAttribute("daysInMonth", daysInMonth);
 		model.addAttribute("firstDayOfMonth", firstDayOfMonth);
 		model.addAttribute("monthOffset", monthOffset);
-		model.addAttribute("monthName", monthName);
 
 		return "calendar";
 	}
 
-	@GetMapping("/event/{eventId}")
+	@GetMapping("/events/{eventId}")
 	public String event(Model model, @PathVariable Long eventId) {
 
 		Event event = service.getEvent(eventId);
 
 		model.addAttribute("event", event);
 		return "event";
+	}
+
+	@GetMapping("events/add")
+	public String addEvent(@RequestParam LocalDate date, Model model) {
+		model.addAttribute("date", date);
+		return "add-event";
 	}
 
 }
