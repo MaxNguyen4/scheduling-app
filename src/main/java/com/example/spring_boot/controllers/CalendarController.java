@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.time.format.DateTimeFormatter;
+
 
 import com.example.spring_boot.models.Event;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.Collection;
 
@@ -70,10 +73,43 @@ public class CalendarController {
 		return "event";
 	}
 
-	@GetMapping("events/add")
+	@GetMapping("/events/add")
 	public String addEvent(@RequestParam LocalDate date, Model model) {
-		model.addAttribute("date", date);
+
+	
+		Event event = new Event();
+		event.setDate(date);
+		event.setStartTime(LocalTime.of(0,0));
+		event.setEndTime(LocalTime.of(11, 59));
+
+		model.addAttribute("event", event);
+	
 		return "add-event";
+	}
+
+	@PostMapping("/events/add")
+	public String postEvent(@ModelAttribute("event") Event event) {
+
+		int currMonth = LocalDate.now().getMonthValue();
+		int currYear = LocalDate.now().getYear();
+		int eventMonth = event.getDate().getMonthValue();
+		int eventYear = event.getDate().getYear();
+
+		int monthOffset = 0;
+
+		if (eventYear > currYear) {
+			monthOffset = (eventMonth - currMonth) + 12;
+		}
+		else if (currYear > eventYear) {
+			monthOffset = (eventMonth - currMonth) - 12;
+		}
+		else {
+			monthOffset = eventMonth - currMonth;
+		}
+		
+		service.addEvent(1L, event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
+
+		return "redirect:/calendar/" + monthOffset;
 	}
 
 }

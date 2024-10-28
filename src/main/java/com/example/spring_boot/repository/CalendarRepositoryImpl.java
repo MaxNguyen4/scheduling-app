@@ -115,10 +115,10 @@ public class CalendarRepositoryImpl implements CalendarRepository {
 
             stmt.setLong(1, eventId);
 
-            System.out.println(stmt);  // For debugging
+            System.out.println(stmt);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {  // Only process if a result exists
+                if (rs.next()) { 
                     Long id = rs.getLong(1);
                     Long userId = rs.getLong(2);
                     String title = rs.getString(3);
@@ -137,6 +137,33 @@ public class CalendarRepositoryImpl implements CalendarRepository {
 
         return event;
     }
+
+    @Override
+    public Long addEvent(Long userId, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String details) {
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO events (user_id, event_title, event_date, start_time, end_time, details) VALUES (?, ?, ?, ?, ?, ?)")) {
+                stmt.setLong(1, userId);
+                stmt.setString(2, title);
+                stmt.setDate(3, java.sql.Date.valueOf(date));
+                stmt.setTime(4, java.sql.Time.valueOf(startTime));
+                stmt.setTime(5, java.sql.Time.valueOf(endTime));
+                stmt.setString(6, details);
+
+                stmt.executeUpdate();
+
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getLong(1);
+                    }
+                } catch (Exception e) {
+                }
+
+            } catch (SQLException e) {
+            }
+
+        return null;
+    }
+
 
 
 }

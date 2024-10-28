@@ -2,6 +2,7 @@ package com.example.spring_boot.service;
 
 import java.util.Collection;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.springframework.stereotype.Service;
 
@@ -42,5 +43,9 @@ public class CalendarServiceImpl implements CalendarService  {
         return repository.getEvent(eventId);
     }
 
+    @Override
+    public Long addEvent(Long userId, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String details) {
+        return repository.addEvent(userId, title, date, startTime, endTime, details);
+    }
 
 }

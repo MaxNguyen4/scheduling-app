@@ -1,6 +1,9 @@
 package com.example.spring_boot.models;
 
 import java.time.LocalTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 public class Event {
@@ -8,6 +11,8 @@ public class Event {
     private Long id;
     private Long userId;
     private String title;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
