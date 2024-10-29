@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
-import java.sql.Time;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,6 @@ import com.example.spring_boot.models.Event;
 
 import org.springframework.stereotype.Repository;
 
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.datasource.init.UncategorizedScriptException;
 
 @Repository

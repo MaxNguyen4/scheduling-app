@@ -9,19 +9,15 @@
     
     <div class="flex justify-center items-center mb-8">
         <a th:href="@{/calendar/{monthOffset}(monthOffset=${monthOffset - 1})}">
-            <button class="bg-green-200 text-green-800 px-4 py-2 rounded-lg hover:bg-green-300 transition ease-in-out duration-200 shadow-md">
-                ← Previous
-            </button>
+            ←
         </a>
 
-        <h2 class="text-xl font-bold px-6">
+        <h2 class="text-xl font-bold px-6 w-52 text-center">
             [[${#strings.capitalize(localDate.getMonth().toString().toLowerCase())}]] [[${localDate.getYear().toString()}]]
         </h2>
 
         <a th:href="@{/calendar/{monthOffset}(monthOffset=${monthOffset + 1})}">
-            <button class="bg-green-200 text-green-800 px-4 py-2 rounded-lg hover:bg-green-300 transition ease-in-out duration-200 shadow-md">
-                Next →
-            </button>
+            →
         </a>
     </div>
 
