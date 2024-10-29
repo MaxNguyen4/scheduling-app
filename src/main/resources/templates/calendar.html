@@ -47,6 +47,7 @@
                 <p th:text="${day}"></p>
                 <form th:action="@{/events/add}" method="get">
                     <input type="hidden" name="date" th:value="${localDate.withDayOfMonth(day)}">
+                    <input type="hidden" name="monthOffset" th:value="${monthOffset}">
                     <button class="invisible group-hover:visible hover:bg-gray-200 rounded border-2 pl-1 pr-1 transition ease-in-out duration-200 w-8 h-8">
                         +
                     </button>

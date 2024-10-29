@@ -47,5 +47,33 @@ public class CalendarServiceImpl implements CalendarService  {
     public Long addEvent(Long userId, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String details) {
         return repository.addEvent(userId, title, date, startTime, endTime, details);
     }
+    
+    @Override
+    public void updateEvent(Long id, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String details) {
+        repository.updateEvent(id, title, date, startTime, endTime, details);
+    }
+
+    @Override
+    public int getMonthOffset(Event event) {
+
+        int currMonth = LocalDate.now().getMonthValue();
+		int currYear = LocalDate.now().getYear();
+		int eventMonth = event.getDate().getMonthValue();
+		int eventYear = event.getDate().getYear();
+
+		int monthOffset = 0;
+
+		if (eventYear > currYear) {
+			monthOffset = (eventMonth - currMonth) + 12;
+		}
+		else if (currYear > eventYear) {
+			monthOffset = (eventMonth - currMonth) - 12;
+		}
+		else {
+			monthOffset = eventMonth - currMonth;
+		}
+
+        return monthOffset;
+    }
 
 }

@@ -164,6 +164,24 @@ public class CalendarRepositoryImpl implements CalendarRepository {
         return null;
     }
 
+    @Override
+    public void updateEvent(Long id, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String details) {
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("UPDATE events SET event_title = ?, event_date = ?, start_time = ?, end_time = ?, details = ? WHERE event_id = ?")) {
+                stmt.setString(1, title);
+                stmt.setDate(2, java.sql.Date.valueOf(date));
+                stmt.setTime(3, java.sql.Time.valueOf(startTime));
+                stmt.setTime(4, java.sql.Time.valueOf(endTime));
+                stmt.setString(5, details);
+                stmt.setLong(6, id);
+
+                stmt.executeUpdate();
+            
+        } catch (Exception e) {
+        }
+    }
+
+
 
 
 }

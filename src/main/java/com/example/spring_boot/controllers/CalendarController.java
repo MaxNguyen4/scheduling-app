@@ -73,8 +73,18 @@ public class CalendarController {
 		return "event";
 	}
 
+	@PostMapping("/events")
+	public String modifyEvent(@ModelAttribute("event") Event event) {
+
+		service.updateEvent(event.getId(), event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
+
+		int monthOffset = service.getMonthOffset(event);
+
+		return "redirect:/calendar/" + monthOffset;
+	}
+
 	@GetMapping("/events/add")
-	public String addEvent(@RequestParam LocalDate date, Model model) {
+	public String addEvent(@RequestParam LocalDate date, @RequestParam int monthOffset, Model model) {
 
 	
 		Event event = new Event();
@@ -83,29 +93,15 @@ public class CalendarController {
 		event.setEndTime(LocalTime.of(11, 59));
 
 		model.addAttribute("event", event);
-	
+		model.addAttribute("monthOffset", monthOffset);
+
 		return "add-event";
 	}
 
 	@PostMapping("/events/add")
-	public String postEvent(@ModelAttribute("event") Event event) {
+	public String addEvent(@ModelAttribute("event") Event event) {
 
-		int currMonth = LocalDate.now().getMonthValue();
-		int currYear = LocalDate.now().getYear();
-		int eventMonth = event.getDate().getMonthValue();
-		int eventYear = event.getDate().getYear();
-
-		int monthOffset = 0;
-
-		if (eventYear > currYear) {
-			monthOffset = (eventMonth - currMonth) + 12;
-		}
-		else if (currYear > eventYear) {
-			monthOffset = (eventMonth - currMonth) - 12;
-		}
-		else {
-			monthOffset = eventMonth - currMonth;
-		}
+		int monthOffset = service.getMonthOffset(event);
 		
 		service.addEvent(1L, event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
 
