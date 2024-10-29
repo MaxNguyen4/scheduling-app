@@ -54,6 +54,11 @@ public class CalendarServiceImpl implements CalendarService  {
     }
 
     @Override
+    public void deleteEvent(Long id) {
+        repository.deleteEvent(id);
+    }
+
+    @Override
     public int getMonthOffset(Event event) {
 
         int currMonth = LocalDate.now().getMonthValue();

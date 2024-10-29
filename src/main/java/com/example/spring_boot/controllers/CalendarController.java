@@ -5,10 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.format.DateTimeFormatter;
 
 
@@ -68,8 +66,10 @@ public class CalendarController {
 	public String event(Model model, @PathVariable Long eventId) {
 
 		Event event = service.getEvent(eventId);
+		int monthOffset = service.getMonthOffset(event);
 
 		model.addAttribute("event", event);
+		model.addAttribute("monthOffset", monthOffset);
 		return "event";
 	}
 
@@ -104,6 +104,16 @@ public class CalendarController {
 		int monthOffset = service.getMonthOffset(event);
 		
 		service.addEvent(1L, event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
+
+		return "redirect:/calendar/" + monthOffset;
+	}
+
+	@GetMapping("/events/delete/{eventId}")
+	public String deleteEvent(@PathVariable("eventId") Long eventId) {
+
+		Event event = service.getEvent(eventId);
+		int monthOffset = service.getMonthOffset(event);
+		service.deleteEvent(eventId);
 
 		return "redirect:/calendar/" + monthOffset;
 	}

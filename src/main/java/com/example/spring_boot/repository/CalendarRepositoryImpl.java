@@ -181,6 +181,17 @@ public class CalendarRepositoryImpl implements CalendarRepository {
         }
     }
 
+    @Override
+    public void deleteEvent(Long id) {
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM events WHERE event_id = ?")) {
+                stmt.setLong(1, id);
+
+                stmt.executeUpdate();
+            
+        } catch (Exception e) {
+        }
+    }
 
 
 
