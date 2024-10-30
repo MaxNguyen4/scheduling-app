@@ -62,23 +62,19 @@ public class CalendarRepositoryImpl implements CalendarRepository {
     }
 
     @Override
-    public List<Event> getEventsBetweenDates(LocalDate startDate, LocalDate endDate) {
-        List<Event> events = new ArrayList<Event>();
+    public List<Event> getEventsByUserId(Long id) {
 
-        Date sqlStartDate = Date.valueOf(startDate);
-        Date sqlEndDate = Date.valueOf(endDate);
+        List<Event> events = new ArrayList<Event>();
 
         try {
             Connection connection = dataSource.getConnection();
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM events WHERE event_date BETWEEN ? AND ?");
-            
-            stmt.setDate(1, sqlStartDate);
-            stmt.setDate(2, sqlEndDate);
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM events WHERE user_id = ?");
 
+            stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Long id = rs.getLong(1);
+                Long eventId = rs.getLong(1);
                 Long userId = rs.getLong(2);
                 String title = rs.getString(3);
                 LocalDate date = rs.getDate(4).toLocalDate();
@@ -86,19 +82,20 @@ public class CalendarRepositoryImpl implements CalendarRepository {
                 LocalTime endTime = rs.getTime(6).toLocalTime();
                 String details = rs.getString(7);
 
-                Event event = new Event(id, userId, title, date, startTime, endTime, details);
+                Event event = new Event(eventId, userId, title, date, startTime, endTime, details);
                 events.add(event);
             }
-
+            
             rs.close();
             stmt.close();
             connection.close();
 
         } catch (SQLException e) {
-            throw new UncategorizedScriptException("Error in getEventsBetweenDates" + e.getMessage(), e);
+            throw new UncategorizedScriptException("Error in getAllEvents" + e.getMessage(), e);
         }
 
         return events;
+
     }
 
     @Override

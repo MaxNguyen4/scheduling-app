@@ -7,44 +7,57 @@
 
 <body class="p-4">
     
-    <div class="flex justify-center items-center mb-8">
-        <a th:href="@{/calendar/{monthOffset}(monthOffset=${monthOffset - 1})}">
-            ←
-        </a>
+    <div class="flex justify-between items-center mb-8">
 
-        <h2 class="text-xl font-bold px-6 w-52 text-center">
-            [[${#strings.capitalize(localDate.getMonth().toString().toLowerCase())}]] [[${localDate.getYear().toString()}]]
-        </h2>
+        <div>
+            <a>
+                view
+            </a>
+        </div>
 
-        <a th:href="@{/calendar/{monthOffset}(monthOffset=${monthOffset + 1})}">
-            →
-        </a>
+        <div class="flex justify-center">
+            <a th:href="@{/calendar/{monthOffset}(monthOffset=${monthOffset - 1})}">
+                ←
+            </a>
+
+            <h2 class="text-lg font-bold px-6 w-52 text-center">
+                [[${#strings.capitalize(localDate.getMonth().toString().toLowerCase())}]] [[${localDate.getYear().toString()}]]
+            </h2>
+
+            <a th:href="@{/calendar/{monthOffset}(monthOffset=${monthOffset + 1})}">
+                →
+            </a>
+        </div>
+
+        <div>
+            <a th:href="@{/user/login}"> account</a>
+        </div>
     </div>
 
 
-    <div class="grid grid-cols-7 gap-2">
+    <div class="grid grid-cols-7 gap-2 pl-12 pr-12">
         
-        <div class="pb-2"> Sunday: </div>
-        <div class="pb-2"> Monday: </div>
-        <div class="pb-2"> Tuesday: </div>
-        <div class="pb-2"> Wednesday: </div>
-        <div class="pb-2"> Thursday: </div>
-        <div class="pb-2"> Friday: </div>
-        <div class="pb-2"> Saturday: </div>
+        <div class="pb-2 text-sm"> Sunday: </div>
+        <div class="pb-2 text-sm"> Monday: </div>
+        <div class="pb-2 text-sm"> Tuesday: </div>
+        <div class="pb-2 text-sm"> Wednesday: </div>
+        <div class="pb-2 text-sm"> Thursday: </div>
+        <div class="pb-2 text-sm"> Friday: </div>
+        <div class="pb-2 text-sm"> Saturday: </div>
 
 
         <div th:each="i : ${#numbers.sequence(0, firstDayOfMonth - 1)}">
         </div>
 
-        <div class="border border-green p-4 h-36 rounded group min-h-36 h-auto hover:bg-green-50 transition ease-in-out duration-200 shadow-md" th:each="day : ${#numbers.sequence(1, daysInMonth)}"
+        <div class="border border-green p-4 h-32 rounded group min-h-32 h-auto hover:bg-green-50 transition ease-in-out duration-200 shadow-md text-xs" th:each="day : ${#numbers.sequence(1, daysInMonth)}"
         th:classappend="${day == currentDay} ? 'bg-green-100 border-green-400' : ''">
 
-            <div class="flex justify-between pb-1">
+            <div class="flex justify-between">
                 <p th:text="${day}"></p>
                 <form th:action="@{/events/add}" method="get">
                     <input type="hidden" name="date" th:value="${localDate.withDayOfMonth(day)}">
                     <input type="hidden" name="monthOffset" th:value="${monthOffset}">
-                    <button class="invisible group-hover:visible hover:bg-gray-200 rounded border-2 pl-1 pr-1 transition ease-in-out duration-200 w-8 h-8">
+                    <button class="invisible group-hover:visible hover:bg-gray-200 bg-white rounded border-2 pl-1 pr-1 transition ease-in-out duration-200 w-6 h-6 -mt-1 mb-1">
                         +
                     </button>
                 </form>
@@ -53,7 +66,7 @@
 
             <div th:each="event : ${events}" th:if="${event.date.dayOfMonth} == ${day}">
                 <a th:href="@{'/events/' + ${event.id}}" class="w-full">
-                    <button class="text-sm bg-green-200 text-green-800 rounded-md py-2 px-3 mb-2 w-full hover:bg-green-300 transition ease-in-out duration-150">
+                    <button class="text-[12px] bg-green-200 text-green-800 rounded-md py-1.5 px-2 mb-2 w-full hover:bg-green-300 transition ease-in-out duration-150">
                         <span th:text="${event.title}"></span>
                     </button>
                 </a>

@@ -1,6 +1,6 @@
 package com.example.spring_boot.service;
 
-import java.util.Collection;
+import java.util.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -24,18 +24,67 @@ public class CalendarServiceImpl implements CalendarService  {
     }
 
     @Override
-    public Collection<Event> getEventsBetweenDates(LocalDate startDate, LocalDate endDate) {
-        return repository.getEventsBetweenDates(startDate, endDate);
+    public Collection<Event> getEventsByUserId(Long id) {
+        return repository.getEventsByUserId(id);
+    }
 
+    @Override
+    public Collection<Event> getEventsBetweenDates(LocalDate startDate, LocalDate endDate) {
+
+        Collection<Event> events = repository.getAllEvents();
+        Collection<Event> results = new ArrayList<Event>();
+        LocalDate date;
+
+        for (Event event : events) {
+            date = event.getDate();
+
+            if (date.isAfter(startDate) || date.isEqual(startDate)) {
+                if (date.isBefore(endDate) || date.isEqual(endDate)) {
+                    results.add(event);
+                }
+            }
+        }
+
+        return results;
     }   
 
     @Override
-    public Collection<Event> getEventForMonth(LocalDate date) {
+    public Collection<Event> getEventsBetweenDatesByUserId(LocalDate startDate, LocalDate endDate, Long id) {
+
+        Collection<Event> events = repository.getEventsByUserId(id);
+        Collection<Event> results = new ArrayList<Event>();
+        LocalDate date;
+
+        for (Event event : events) {
+            date = event.getDate();
+
+            if (date.isAfter(startDate) || date.isEqual(startDate)) {
+                if (date.isBefore(endDate) || date.isEqual(endDate)) {
+                    results.add(event);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    @Override
+    public Collection<Event> getEventsForMonth(LocalDate date) {
 
         LocalDate startDate = date.withDayOfMonth(1);
         LocalDate endDate = date.withDayOfMonth(date.lengthOfMonth());
 
-        return repository.getEventsBetweenDates(startDate, endDate);
+        return getEventsBetweenDates(startDate, endDate);
+    }
+
+    @Override
+    public Collection<Event> getEventsForMonthByUserId(LocalDate date, Long id) {
+
+        LocalDate startDate = date.withDayOfMonth(1);
+        LocalDate endDate = date.withDayOfMonth(date.lengthOfMonth());
+
+        return getEventsBetweenDatesByUserId(startDate, endDate, id);
+
     }
 
     @Override

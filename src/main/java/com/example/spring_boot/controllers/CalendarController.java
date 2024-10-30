@@ -3,21 +3,14 @@ package com.example.spring_boot.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.format.DateTimeFormatter;
-
-
 import com.example.spring_boot.models.Event;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
+import java.time.*;
 import java.util.Collection;
 
 import com.example.spring_boot.service.*;
+import jakarta.servlet.http.HttpSession;
+
 
 @Controller
 @RequestMapping("/")
@@ -31,14 +24,16 @@ public class CalendarController {
     }
 
 	@GetMapping("")
-    public String defaultCalendar(Model model) {
-        return newMonth(model, 0);
+    public String defaultCalendar(Model model, HttpSession session) {
+        return newMonth(model, 0, session);
     }
 
 	@GetMapping("calendar/{monthOffset}")
-	public String newMonth(Model model, @PathVariable int monthOffset) {
+	public String newMonth(Model model, @PathVariable int monthOffset, HttpSession session) {
 
 		LocalDate localDate = LocalDate.now().plusMonths(monthOffset);
+		Long userId = (Long) session.getAttribute("userId");
+
 		int currentDay;
 
 		if (monthOffset == 0) {
@@ -51,7 +46,7 @@ public class CalendarController {
 		int daysInMonth = localDate.lengthOfMonth();
 		int firstDayOfMonth = localDate.withDayOfMonth(1).getDayOfWeek().getValue();
 
-		Collection<Event> events = service.getEventForMonth(localDate);
+		Collection<Event> events = service.getEventsForMonthByUserId(localDate, userId);
 		model.addAttribute("localDate", localDate);
 		model.addAttribute("currentDay", currentDay);
 		model.addAttribute("events", events);

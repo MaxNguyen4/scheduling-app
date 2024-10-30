@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public interface CalendarRepository {
     public List<Event> getAllEvents();
-    public List<Event> getEventsBetweenDates(LocalDate startDate, LocalDate endDate);
+    public List<Event> getEventsByUserId(Long id);
     public Event getEvent(Long id);
     public Long addEvent(Long userId, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String details);
     public void updateEvent(Long id, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String details);
