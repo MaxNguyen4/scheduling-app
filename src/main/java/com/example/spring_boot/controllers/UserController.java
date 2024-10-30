@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import com.example.spring_boot.models.*;
 import com.example.spring_boot.service.UserServiceImpl;
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
@@ -34,20 +35,34 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public String login(@ModelAttribute("user") User user) {
+	public String login(@ModelAttribute("user") User userLogin, HttpSession session, Model model) {
 
-		System.out.println(user.getUsername());
+		User user = service.login(userLogin.getUsername(), userLogin.getPassword());
 
-		User userReq = service.login(user.getUsername(), user.getPassword());
+		if (user != null) {
+			session.setAttribute("username", user.getUsername());
+			session.setAttribute("userId", user.getUserId());
+			session.setAttribute("password", user.getPassword());
 
-		if (userReq == null) {
-			System.out.println("NOT FOUND");
+			System.out.println(session.getAttribute("username"));
+
+			return "redirect:/calendar/0";            
 		}
 		else {
-			System.out.println("FOUND");
-		}
+			model.addAttribute("error", "No account found, try again");
 
-		return "user/login";
+			return "user/login";
+		}
+	}
+
+	@GetMapping("/create-account")
+	public String createAccount(Model model) {
+
+		User user = new User();
+
+		model.addAttribute("user", user);
+
+		return "user/create-account";
 	}
 
 

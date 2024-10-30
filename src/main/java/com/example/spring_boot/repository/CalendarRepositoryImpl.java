@@ -75,8 +75,6 @@ public class CalendarRepositoryImpl implements CalendarRepository {
             stmt.setDate(1, sqlStartDate);
             stmt.setDate(2, sqlEndDate);
 
-            System.out.println(stmt);
-
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -112,8 +110,6 @@ public class CalendarRepositoryImpl implements CalendarRepository {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM events WHERE event_id = ?")) {
 
             stmt.setLong(1, eventId);
-
-            System.out.println(stmt);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) { 

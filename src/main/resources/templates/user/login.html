@@ -11,6 +11,8 @@
         <form th:action="@{/user/login}" th:object="${user}" method="post">
             <h2 class="text-4xl font-bold mb-4">Log In</h2>
 
+            <p th:text="${error}" class="bg-red-200 rounded-md shadow-sm w-full p-2 mb-1 border border-red-300 text-red-800"></p>
+
             <p class="text-lg"> Username: </p>
             <input th:field="*{username}" class="rounded-md shadow-sm p-2 border border-gray-300 w-full mt-1">
 
@@ -19,13 +21,14 @@
             
             <div class="flex">
                 <p> don't have an account? </p>
-                <a th:href="@{/users/create-account}" class="text-green-400 hover:text-green-800 underline pl-1"> create one here </a>
+                <a th:href="@{/user/create-account}" class="text-green-400 hover:text-green-800 underline pl-1"> create one here </a>
             </div>
 
             <div class="flex justify-between  mt-8">
                 <button type="submit" class="bg-green-200 p-2 rounded-md shadow-sm text-green-800 hover:bg-green-300 w-24"> Login </button>
                 <a class="rounded-md shadow-sm bg-gray-200 hover:bg-gray-300 p-2 w-24 text-center"> Go Back</a>
             </div>
+
 
         </form>
     </div>
