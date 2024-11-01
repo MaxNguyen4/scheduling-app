@@ -12,14 +12,15 @@ public class UserRepositoryImpl implements UserRepository{
 
     private final DataSource dataSource;
 
+
     public UserRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
     
     @Override
-    public User findByUsername(String username) {
+    public Users findByUsername(String username) {
 
-        User user = null;
+        Users user = null;
 
         try (Connection connection = dataSource.getConnection();
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username = ?")) {
@@ -28,7 +29,7 @@ public class UserRepositoryImpl implements UserRepository{
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
-                    user = new User(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"));
+                    user = new Users(rs.getLong("user_id"), rs.getString("username"), rs.getString("password"));
                 }
                 
         } catch (Exception e) {

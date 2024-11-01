@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import com.example.spring_boot.models.*;
-import com.example.spring_boot.service.UserServiceImpl;
+import com.example.spring_boot.service.UsersServiceImpl;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -13,10 +13,10 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/user")
 public class UserController {
 
-	private final UserServiceImpl service;
+	private final UsersServiceImpl service;
 
 	@Autowired
-	public UserController(UserServiceImpl service) {
+	public UserController(UsersServiceImpl service) {
 		this.service = service;
 	}
 
@@ -28,7 +28,7 @@ public class UserController {
 	@GetMapping("/login")
 	public String login(Model model) {
 
-		User user = new User();
+		Users user = new Users();
 
 		model.addAttribute("user", user);
 		return "user/login";
@@ -37,7 +37,7 @@ public class UserController {
 	@GetMapping("/create-account")
 	public String createAccount(Model model) {
 
-		User user = new User();
+		Users user = new Users();
 
 		model.addAttribute("user", user);
 
@@ -45,7 +45,11 @@ public class UserController {
 	}
 
 	@PostMapping("/create-account")
-	public String createAccount(@ModelAttribute("user") User user) {
+	public String createAccount(@ModelAttribute("user") Users user, @RequestParam("confirmPassword") String confirmPassword) {
+
+		System.out.println(confirmPassword);
+
+		service.createAccount(user.getUsername(), user.getPassword());
 
 		return "user/login";
 	}

@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import com.example.spring_boot.config.*;
 import static org.springframework.security.config.Customizer.withDefaults;
 import javax.sql.DataSource;
 
@@ -36,6 +37,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/user/login", "/user/create-account", "/h2-console/**", "/css/**", "/js/**", "/images/**").permitAll() 
+                .requestMatchers("/events/**", "calendar/**").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -55,34 +57,16 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    /* 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        //String encodedPassword = passwordEncoder().encode("password");
-
-        UserDetails user1 = User.withUsername("user1")
-            .password("{noop}password")
-            .roles("USER")
-            .build();
-
-        return new InMemoryUserDetailsManager(user1);
-    }
-    */
     
     @Bean
-    public UserDetailsService userDetailsService() {
-        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+    public JdbcUserDetailsManager userDetailsManager() {
+        JdbcUserDetailsManager manager = new JdbcUserDetailsManager();
+        manager.setDataSource(dataSource);
 
-        // Custom query to load user details
-        userDetailsManager.setUsersByUsernameQuery(
-                "SELECT username, password, enabled FROM users WHERE username = ?");
-
-        // Custom query to load user authorities (assigning a default role)
-        userDetailsManager.setAuthoritiesByUsernameQuery(
-                "SELECT username, 'ROLE_USER' as authority FROM users WHERE username = ?");
-
-        return userDetailsManager;
+        manager.setUsersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username = ?");
+        manager.setAuthoritiesByUsernameQuery("SELECT username, 'ROLE_USER' as authority FROM users WHERE username = ?");
+        
+        return manager;
     }
 
     /* 
@@ -92,6 +76,11 @@ public class SecurityConfig {
     }
     */
 
+    @Bean
+    @SuppressWarnings("deprecation")
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance(); // Use plain text for development
+}
     
 
 }

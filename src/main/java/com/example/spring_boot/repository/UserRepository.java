@@ -4,5 +4,5 @@ import com.example.spring_boot.models.*;
 
 public interface UserRepository {
     
-    public User findByUsername(String username);
+    public Users findByUsername(String username);
 }

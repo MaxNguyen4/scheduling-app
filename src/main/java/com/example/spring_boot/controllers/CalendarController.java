@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.spring_boot.models.Event;
+import com.example.spring_boot.util.SecurityUtils;
 import java.time.*;
 import java.util.Collection;
 
@@ -18,38 +19,31 @@ import jakarta.servlet.http.HttpSession;
 public class CalendarController {
 
     private final CalendarServiceImpl service;
+	private final SecurityUtils securityUtils;
 
     @Autowired
-    public CalendarController(CalendarServiceImpl service) {
+    public CalendarController(CalendarServiceImpl service, SecurityUtils securityUtils) {
         this.service = service;
+		this.securityUtils = securityUtils;
     }
-
 
 	@GetMapping("")
     public String defaultCalendar(Model model, HttpSession session) {
-
         return newMonth(model, 0, session);
     }
 
 	@GetMapping("calendar/{monthOffset}")
 	public String newMonth(Model model, @PathVariable int monthOffset, HttpSession session) {
-
+	
+		Long userId = securityUtils.getAuthenticatedUserId();
 		LocalDate localDate = LocalDate.now().plusMonths(monthOffset);
-		Long userId = (Long) session.getAttribute("userId");
 
-		int currentDay;
-
-		if (monthOffset == 0) {
-			currentDay = LocalDate.now().getDayOfMonth();
-		}
-		else {
-			currentDay = 32;
-		}
+		int currentDay = (monthOffset == 0) ? LocalDate.now().getDayOfMonth() : 32;
 
 		int daysInMonth = localDate.lengthOfMonth();
 		int firstDayOfMonth = localDate.withDayOfMonth(1).getDayOfWeek().getValue();
 
-		Collection<Event> events = service.getEventsForMonthByUserId(localDate, 1L);
+		Collection<Event> events = service.getEventsForMonthByUserId(localDate, userId);
 		model.addAttribute("localDate", localDate);
 		model.addAttribute("currentDay", currentDay);
 		model.addAttribute("events", events);
@@ -61,8 +55,8 @@ public class CalendarController {
 	}
 
 	@GetMapping("/events/{eventId}")
+	@PreAuthorize("@securityUtils.getAuthenticatedUserId() == @calendarService.getEvent(#eventId).userId")
 	public String event(Model model, @PathVariable Long eventId, HttpSession session) {
-
 		Event event = service.getEvent(eventId);
 		int monthOffset = service.getMonthOffset(event);
 
@@ -72,10 +66,9 @@ public class CalendarController {
 	}
 
 	@PostMapping("/events")
+	@PreAuthorize("@securityUtils.getAuthenticatedUserId() == @calendarService.getEvent(#event.id).userId")
 	public String modifyEvent(@ModelAttribute("event") Event event) {
-
 		service.updateEvent(event.getId(), event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
-
 		int monthOffset = service.getMonthOffset(event);
 
 		return "redirect:/calendar/" + monthOffset;
@@ -83,10 +76,9 @@ public class CalendarController {
 
 	@GetMapping("/events/add")
 	public String addEvent(@RequestParam LocalDate date, @RequestParam int monthOffset, Model model, HttpSession session) {
-
 		Event event = new Event();
 		event.setDate(date);
-		event.setStartTime(LocalTime.of(0,0));
+		event.setStartTime(LocalTime.of(0, 0));
 		event.setEndTime(LocalTime.of(11, 59));
 
 		model.addAttribute("event", event);
@@ -97,19 +89,20 @@ public class CalendarController {
 
 	@PostMapping("/events/add")
 	public String addEvent(@ModelAttribute("event") Event event) {
-
+		Long userId = securityUtils.getAuthenticatedUserId();
 		int monthOffset = service.getMonthOffset(event);
 		
-		service.addEvent(1L, event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
+		service.addEvent(userId, event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
 
 		return "redirect:/calendar/" + monthOffset;
 	}
 
 	@GetMapping("/events/delete/{eventId}")
+	@PreAuthorize("@securityUtils.getAuthenticatedUserId() == @calendarService.getEvent(#eventId).userId")
 	public String deleteEvent(@PathVariable("eventId") Long eventId, HttpSession session) {
-
 		Event event = service.getEvent(eventId);
 		int monthOffset = service.getMonthOffset(event);
+
 		service.deleteEvent(eventId);
 
 		return "redirect:/calendar/" + monthOffset;

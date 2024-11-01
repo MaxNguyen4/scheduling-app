@@ -1,19 +1,19 @@
 package com.example.spring_boot.models;
 
-public class User {
+public class Users {
     private Long userId;
     private String username;
     private String password;
 
 
 
-    public User(Long userId, String username, String password) {
+    public Users(Long userId, String username, String password) {
         this.userId = userId;
         this.username = username;
         this.password = password;
     }
 
-    public User(){
+    public Users(){
     }
 
     public void setUserId(Long userId) {

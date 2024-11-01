@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.spring_boot.models.Event;
 import com.example.spring_boot.repository.CalendarRepositoryImpl;
 
-@Service
+@Service("calendarService")
 public class CalendarServiceImpl implements CalendarService  {
     
     private final CalendarRepositoryImpl repository;
