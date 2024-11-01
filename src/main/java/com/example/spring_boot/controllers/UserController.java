@@ -34,6 +34,23 @@ public class UserController {
 		return "user/login";
 	}
 
+	@GetMapping("/create-account")
+	public String createAccount(Model model) {
+
+		User user = new User();
+
+		model.addAttribute("user", user);
+
+		return "user/create-account";
+	}
+
+	@PostMapping("/create-account")
+	public String createAccount(@ModelAttribute("user") User user) {
+
+		return "user/login";
+	}
+
+	/* 
 	@PostMapping("/login")
 	public String login(@ModelAttribute("user") User userLogin, HttpSession session, Model model) {
 
@@ -54,17 +71,6 @@ public class UserController {
 			return "user/login";
 		}
 	}
-
-	@GetMapping("/create-account")
-	public String createAccount(Model model) {
-
-		User user = new User();
-
-		model.addAttribute("user", user);
-
-		return "user/create-account";
-	}
-
-
+	*/
 
 }

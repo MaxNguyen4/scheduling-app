@@ -1,6 +1,7 @@
 package com.example.spring_boot.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,10 @@ public class CalendarController {
         this.service = service;
     }
 
+
 	@GetMapping("")
     public String defaultCalendar(Model model, HttpSession session) {
+
         return newMonth(model, 0, session);
     }
 
@@ -46,7 +49,7 @@ public class CalendarController {
 		int daysInMonth = localDate.lengthOfMonth();
 		int firstDayOfMonth = localDate.withDayOfMonth(1).getDayOfWeek().getValue();
 
-		Collection<Event> events = service.getEventsForMonthByUserId(localDate, userId);
+		Collection<Event> events = service.getEventsForMonthByUserId(localDate, 1L);
 		model.addAttribute("localDate", localDate);
 		model.addAttribute("currentDay", currentDay);
 		model.addAttribute("events", events);
@@ -58,7 +61,7 @@ public class CalendarController {
 	}
 
 	@GetMapping("/events/{eventId}")
-	public String event(Model model, @PathVariable Long eventId) {
+	public String event(Model model, @PathVariable Long eventId, HttpSession session) {
 
 		Event event = service.getEvent(eventId);
 		int monthOffset = service.getMonthOffset(event);
@@ -79,9 +82,8 @@ public class CalendarController {
 	}
 
 	@GetMapping("/events/add")
-	public String addEvent(@RequestParam LocalDate date, @RequestParam int monthOffset, Model model) {
+	public String addEvent(@RequestParam LocalDate date, @RequestParam int monthOffset, Model model, HttpSession session) {
 
-	
 		Event event = new Event();
 		event.setDate(date);
 		event.setStartTime(LocalTime.of(0,0));
@@ -104,7 +106,7 @@ public class CalendarController {
 	}
 
 	@GetMapping("/events/delete/{eventId}")
-	public String deleteEvent(@PathVariable("eventId") Long eventId) {
+	public String deleteEvent(@PathVariable("eventId") Long eventId, HttpSession session) {
 
 		Event event = service.getEvent(eventId);
 		int monthOffset = service.getMonthOffset(event);

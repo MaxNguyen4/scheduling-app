@@ -1,6 +1,6 @@
 -- Insert a user with a hashed password (e.g., bcrypt hashed password)
 INSERT INTO users (username, password)
-VALUES ('max', 'Test@123');
+VALUES ('max', '{noop}Test@123');
 
 -- Insert events for the user with user_id = 1
 INSERT INTO events (user_id, event_title, event_date, start_time, end_time, details)
