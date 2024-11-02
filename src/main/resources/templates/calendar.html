@@ -16,7 +16,7 @@
         </div>
 
         <div class="flex justify-center">
-            <a th:href="@{/calendar/{monthOffset}(monthOffset=${monthOffset - 1})}">
+            <a th:href="@{/month/{monthOffset}(monthOffset=${monthOffset - 1})}">
                 ←
             </a>
 
@@ -24,7 +24,7 @@
                 [[${#strings.capitalize(localDate.getMonth().toString().toLowerCase())}]] [[${localDate.getYear().toString()}]]
             </h2>
 
-            <a th:href="@{/calendar/{monthOffset}(monthOffset=${monthOffset + 1})}">
+            <a th:href="@{/month/{monthOffset}(monthOffset=${monthOffset + 1})}">
                 →
             </a>
         </div>

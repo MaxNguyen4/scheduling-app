@@ -37,12 +37,12 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/user/login", "/user/create-account", "/h2-console/**", "/css/**", "/js/**", "/images/**").permitAll() 
-                .requestMatchers("/events/**", "calendar/**").authenticated()
+                .requestMatchers("/events/**", "month/**").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/user/login")
-                .defaultSuccessUrl("/calendar/0", true)
+                .defaultSuccessUrl("/month/0", true)
                 .failureUrl("/user/login?error=true")
                 .permitAll()
             )

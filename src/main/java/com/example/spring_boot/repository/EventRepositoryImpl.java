@@ -19,11 +19,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.datasource.init.UncategorizedScriptException;
 
 @Repository
-public class CalendarRepositoryImpl implements CalendarRepository {
+public class EventRepositoryImpl implements EventRepository {
 
     private final DataSource dataSource;
 
-    public CalendarRepositoryImpl(DataSource dataSource) {
+    public EventRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
     

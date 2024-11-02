@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import com.example.spring_boot.models.Event;
 
-public interface CalendarService {
+public interface EventService {
     public Collection<Event> getAllEvents();
     public Collection<Event> getEventsByUserId(Long id);
     public Collection<Event> getEventsBetweenDates(LocalDate startDate, LocalDate endDate);

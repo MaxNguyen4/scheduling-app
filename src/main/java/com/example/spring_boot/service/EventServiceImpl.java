@@ -7,14 +7,14 @@ import java.time.LocalTime;
 import org.springframework.stereotype.Service;
 
 import com.example.spring_boot.models.Event;
-import com.example.spring_boot.repository.CalendarRepositoryImpl;
+import com.example.spring_boot.repository.EventRepositoryImpl;
 
-@Service("calendarService")
-public class CalendarServiceImpl implements CalendarService  {
+@Service("eventService")
+public class EventServiceImpl implements EventService  {
     
-    private final CalendarRepositoryImpl repository;
+    private final EventRepositoryImpl repository;
 
-    public CalendarServiceImpl(CalendarRepositoryImpl repository) {
+    public EventServiceImpl(EventRepositoryImpl repository) {
         this.repository = repository;
     }
 

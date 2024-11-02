@@ -8,7 +8,7 @@
 <body class="flex justify-center items-center min-h-screen bg-gray-100 w-full">
     <div class="bg-white p-6 rounded-lg shadow-md w-9/12">
 
-        <form th:action="@{/events}" th:object="${event}" method="post">
+        <form th:action="@{/events/edit}" th:object="${event}" method="post">
 
         <div>
             <h2 class="text-xl font-bold mb-4">
@@ -37,7 +37,7 @@
 
         <div class="flex">
 
-            <a class="p-2.5 rounded-md shadow-sm bg-gray-200 hover:bg-gray-300 mr-1 text-sm" th:href="@{'/calendar/' + ${monthOffset}}"> Go Back</a>
+            <a class="p-2.5 rounded-md shadow-sm bg-gray-200 hover:bg-gray-300 mr-1 text-sm" th:href="@{'/month/' + ${monthOffset}}"> Go Back</a>
             <a class="p-2.5 rounded-md shadow-sm bg-red-200 hover:bg-red-300 text-red-800 text-sm" th:href="@{'/events/delete/' + ${event.id}}"> Delete event</a>
 
 

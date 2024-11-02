@@ -4,7 +4,7 @@ import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public interface CalendarRepository {
+public interface EventRepository {
     public List<Event> getAllEvents();
     public List<Event> getEventsByUserId(Long id);
     public Event getEvent(Long id);
