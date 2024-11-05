@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:inline="text">
+<head>
+    <meta charset="utf-8" content="width=device-width, initial-scale=1.0"> 
+    <link href="/css/tailwind.css" rel="stylesheet" >
+</head>
+
+<body class="p-4">
+    
+    <div class="flex justify-between items-center mb-8">
+
+        <div>
+            <a>
+                view
+            </a>
+        </div>
+
+        <div class="flex justify-center">
+            <a>
+                ←
+            </a>
+
+            <h2 class="text-lg font-bold px-6 w-52 text-center">
+                Week of:
+            </h2>
+
+            <a>
+                →
+            </a>
+        </div>
+
+        <div>
+            <a th:href="@{/user/login}"> account</a>
+        </div>
+    </div>
+
+
+    <div class="grid grid-cols-8 gap-2 pl-12 pr-12">
+        
+        <div> </div>
+
+        <div class="pb-2 text-sm"> Sunday: </div>
+        <div class="pb-2 text-sm"> Monday: </div>
+        <div class="pb-2 text-sm"> Tuesday: </div>
+        <div class="pb-2 text-sm"> Wednesday: </div>
+        <div class="pb-2 text-sm"> Thursday: </div>
+        <div class="pb-2 text-sm"> Friday: </div>
+        <div class="pb-2 text-sm"> Saturday: </div>
+    </div>
+
+    <div class="grid grid-cols-8 gap-2 pl-12 pr-12" th:each="time : ${timeSlots}">
+        
+        <div class="text-right pr-2" th:text="${time}"></div>
+
+        <div th:each="day : ${weekDays}"> 
+            <div th:if="${eventMap.get(day).get(time) != null}" th:each="event : ${eventMap.get(day).get(time)}"
+            th:classappend="${eventMap.get(day).get(time) != null ? 'bg-green-200 border-0' : ''}">
+                <p th:if="${event.getStartTime().equals(time)}" th:text="${event.getTitle()}">
+                </p>
+
+                <p th:if="${!event.getStartTime().equals(time)}">
+                    bingus
+                </p>
+                
+            </div>
+        </div>
+    </div>
+
+
+
+    <p>
+        model.addAttribute("weekDays", daysOfWeek);
+        model.addAttribute("timeSlots", timeList);
+        model.addAttribute("eventMap", eventMap);
+
+
+
+    </p>
+
+
+</body>
+
+</html>
+

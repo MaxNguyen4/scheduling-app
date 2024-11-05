@@ -1,8 +1,11 @@
 package com.example.spring_boot.service;
 
 import java.util.*;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 
 import org.springframework.stereotype.Service;
 
@@ -88,6 +91,25 @@ public class EventServiceImpl implements EventService  {
     }
 
     @Override
+    public Collection<Event> getEventsForWeek(LocalDate date) {
+
+        LocalDate startOfWeek = date;
+        LocalDate endOfWeek;
+
+        if (date.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            startOfWeek = date.with(TemporalAdjusters.previous(DayOfWeek.SUNDAY));
+        }
+
+        endOfWeek = startOfWeek.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+
+        System.out.println(startOfWeek);
+        System.out.println(endOfWeek);
+
+        return getEventsBetweenDates(startOfWeek, endOfWeek);
+    }
+
+
+    @Override
     public Event getEvent(Long eventId) {
         return repository.getEvent(eventId);
     }
@@ -129,5 +151,81 @@ public class EventServiceImpl implements EventService  {
 
         return monthOffset;
     }
+
+    @Override
+    public LocalDate getStartOfWeek(LocalDate date) {
+
+        LocalDate startOfWeek = date;
+
+        if (date.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            startOfWeek = date.with(TemporalAdjusters.previous(DayOfWeek.SUNDAY));
+        }
+
+        return startOfWeek;
+    }
+
+    @Override
+    public List<LocalDate> getDaysOfWeek(LocalDate date) {
+        List<LocalDate> weekDays = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            weekDays.add(date.plusDays(i));
+        }
+
+        return weekDays;
+    }
+
+    @Override
+    public List<LocalTime> getTimeList() {
+        List<LocalTime> timeList = new ArrayList<>();
+        LocalTime time = LocalTime.of(6, 0);
+        LocalTime endTime = LocalTime.MIDNIGHT;
+
+        while (!time.equals(endTime)) {
+            timeList.add(time);
+            time = time.plusMinutes(30);
+        }
+
+        return timeList;
+    }
+
+    @Override
+    public LocalTime roundToNearestQuarterHour(LocalTime time) {
+        int minute = time.getMinute();
+        int roundedMinutes = (minute + 7) / 15 * 15;
+        return time.withMinute(roundedMinutes).withSecond(0).withNano(0);
+    }
+
+    @Override
+    public Collection<Event> roundTime(Collection<Event> events) {
+        for (Event event : events) {
+            event.setStartTime(roundToNearestQuarterHour(event.getStartTime()));
+            event.setEndTime(roundToNearestQuarterHour(event.getEndTime()));
+        }
+        return events;
+    }
+
+    @Override
+    public boolean isInTimeFrame(Event event, LocalTime timeSlot) {
+
+        boolean result;
+
+        LocalTime timeStart = event.getStartTime();
+        LocalTime timeEnd = event.getEndTime();
+
+        if (timeSlot.equals(timeStart) || timeSlot.equals((timeEnd.minusMinutes(15)))) {
+            result = true;
+        }
+        else if (timeSlot.isAfter(timeStart) && timeSlot.isBefore(timeEnd)) {
+            result = true;
+        }
+        else {
+            result = false;
+        }
+
+        return result;
+    }
+
+    
+
 
 }

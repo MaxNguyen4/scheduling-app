@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpSession;
 
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/month")
 public class MonthlyViewController {
 
     private final EventServiceImpl service;
@@ -28,11 +28,11 @@ public class MonthlyViewController {
     }
 
 	@GetMapping("")
-    public String defaultCalendar(Model model, HttpSession session) {
+    public String month(Model model, HttpSession session) {
         return newMonth(model, 0, session);
     }
 
-	@GetMapping("month/{monthOffset}")
+	@GetMapping("/{monthOffset}")
 	public String newMonth(Model model, @PathVariable int monthOffset, HttpSession session) {
 	
 		Long userId = securityUtils.getAuthenticatedUserId();
@@ -51,7 +51,7 @@ public class MonthlyViewController {
 		model.addAttribute("firstDayOfMonth", firstDayOfMonth);
 		model.addAttribute("monthOffset", monthOffset);
 
-		return "calendar";
+		return "views/monthly";
 	}
 
 

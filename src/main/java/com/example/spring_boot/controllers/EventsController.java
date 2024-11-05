@@ -35,7 +35,7 @@ public class EventsController {
 
 		model.addAttribute("event", event);
 		model.addAttribute("monthOffset", monthOffset);
-		return "event";
+		return "event/event";
 	}
 
     @PostMapping("/edit")
@@ -44,7 +44,7 @@ public class EventsController {
 		service.updateEvent(event.getId(), event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
 		int monthOffset = service.getMonthOffset(event);
 
-		return "redirect:/calendar/" + monthOffset;
+		return "redirect:/month/" + monthOffset;
 	}
 
 	@GetMapping("/add")
@@ -57,7 +57,7 @@ public class EventsController {
 		model.addAttribute("event", event);
 		model.addAttribute("monthOffset", monthOffset);
 
-		return "add-event";
+		return "event/add-event";
 	}
 
     @PostMapping("/add")
@@ -67,7 +67,7 @@ public class EventsController {
 		
 		service.addEvent(userId, event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
 
-		return "redirect:/calendar/" + monthOffset;
+		return "redirect:/month/" + monthOffset;
 	}
 
 	@GetMapping("/delete/{eventId}")
@@ -78,6 +78,6 @@ public class EventsController {
 
 		service.deleteEvent(eventId);
 
-		return "redirect:/calendar/" + monthOffset;
+		return "redirect:/month/" + monthOffset;
 	}
 }
