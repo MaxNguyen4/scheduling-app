@@ -12,6 +12,8 @@ import java.time.*;
 import java.util.Collection;
 
 import com.example.spring_boot.service.*;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -29,9 +31,14 @@ public class EventsController {
 
     @GetMapping("/{eventId}")
 	@PreAuthorize("@securityUtils.getAuthenticatedUserId() == @eventService.getEvent(#eventId).userId")
-	public String event(Model model, @PathVariable Long eventId, HttpSession session) {
+	public String event(Model model, @PathVariable Long eventId, HttpSession session, HttpServletRequest request) {
 		Event event = service.getEvent(eventId);
 		int monthOffset = service.getMonthOffset(event);
+
+		String referer = request.getHeader("Referer");
+		if (referer != null) {
+			request.getSession().setAttribute("previousPage", referer);
+		}
 
 		model.addAttribute("event", event);
 		model.addAttribute("monthOffset", monthOffset);
@@ -40,11 +47,16 @@ public class EventsController {
 
     @PostMapping("/edit")
 	@PreAuthorize("@securityUtils.getAuthenticatedUserId() == @eventService.getEvent(#event.id).userId")
-	public String modifyEvent(@ModelAttribute("event") Event event) {
+	public String modifyEvent(@ModelAttribute("event") Event event, HttpServletRequest request) {
+
+		String previousPage = (String) request.getSession().getAttribute("previousPage");
+    	request.getSession().removeAttribute("previousPage");
+
 		service.updateEvent(event.getId(), event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
 		int monthOffset = service.getMonthOffset(event);
 
-		return "redirect:/month/" + monthOffset;
+		return previousPage != null ? "redirect:" + previousPage : "redirect:/month/" + monthOffset;
+
 	}
 
 	@GetMapping("/add")

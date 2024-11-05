@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
@@ -13,6 +14,8 @@ import java.util.*;
 import com.example.spring_boot.models.*;
 import com.example.spring_boot.service.EventServiceImpl;
 import com.example.spring_boot.util.SecurityUtils;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/week")
@@ -27,17 +30,19 @@ public class WeeklyViewController {
 		this.securityUtils = securityUtils;
     }
 
-
-    @GetMapping("/")
+    @GetMapping("")
     public String week(Model model) {
+        return newWeek(model, 0);
+    }
 
-        LocalDate startOfWeek = service.getStartOfWeek(LocalDate.of(2024, 10, 13));
+    @GetMapping("/{weekOffset}")
+    public String newWeek(Model model, @PathVariable int weekOffset) {
+
+        LocalDate startOfWeek = service.getStartOfWeek(LocalDate.of(2024, 10, 13).plusWeeks(weekOffset));
 
         List<LocalDate> daysOfWeek = service.getDaysOfWeek(startOfWeek);
         List<LocalTime> timeList = service.getTimeList();
         Collection<Event> events = service.getEventsForWeek(startOfWeek);
-
-        System.out.println(events.size());
         
         events = service.roundTime(events);
 
@@ -64,26 +69,9 @@ public class WeeklyViewController {
                         }
                     }
                 }
-                timeSlot = timeSlot.plusMinutes(15);
+                timeSlot = timeSlot.plusMinutes(30);
             }
         }
-
-        for (Map.Entry<LocalDate, Map<LocalTime, List<Event>>> dayEntry : eventMap.entrySet()) {
-            LocalDate day = dayEntry.getKey();
-            System.out.println("Date: " + day);
-        
-            Map<LocalTime, List<Event>> timeSlots = dayEntry.getValue();
-            for (Map.Entry<LocalTime, List<Event>> timeEntry : timeSlots.entrySet()) {
-                LocalTime time = timeEntry.getKey();
-                List<Event> eventsAtTime = timeEntry.getValue();
-        
-                System.out.println("  Time: " + time + " -> Events: ");
-                for (Event event : eventsAtTime) {
-                    System.out.println("    Event Title: " + event.getTitle() + ", Start: " + event.getStartTime() + ", End: " + event.getEndTime());
-                }
-            }
-        }
-        
 
         model.addAttribute("weekDays", daysOfWeek);
         model.addAttribute("timeSlots", timeList);

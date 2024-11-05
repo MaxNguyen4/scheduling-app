@@ -1,84 +1,69 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:inline="text">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" content="width=device-width, initial-scale=1.0"> 
-    <link href="/css/tailwind.css" rel="stylesheet" >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/tailwind.css" rel="stylesheet">
 </head>
 
 <body class="p-4">
     
     <div class="flex justify-between items-center mb-8">
-
-        <div>
-            <a>
-                view
-            </a>
-        </div>
-
-        <div class="flex justify-center">
-            <a>
+        <div><a th:href="@{/month/0}" class="text-blue-500 hover:text-blue-700">View</a></div>
+        <div class="flex justify-center items-center">
+            <a th:href="@{/week/{weekOffset}(weekOffset=${weekOffset - 1})}">
                 ←
             </a>
+            <h2 class="text-lg font-bold px-6 w-72 text-center">
+                Week of <span th:text="${#temporals.format(weekDays[0], 'dd MMM')}">Start Date</span> - <span th:text="${#temporals.format(weekDays[6], 'dd MMM')}">End Date</span>
 
-            <h2 class="text-lg font-bold px-6 w-52 text-center">
-                Week of:
             </h2>
-
-            <a>
+            <a th:href="@{/week/{weekOffset}(weekOffset=${weekOffset + 1})}">
                 →
             </a>
         </div>
+        <div><a th:href="@{/user/login}" class="text-blue-500 hover:text-blue-700">Account</a></div>
+    </div>
 
-        <div>
-            <a th:href="@{/user/login}"> account</a>
+    <div class="grid grid-cols-8 pr-12 mb-2">
+        <div></div>
+        <div th:each="day : ${weekDays}"  class="pb-2 text-sm font-semibold text-center">
+            <span th:text="${#strings.capitalize(day.dayOfWeek.toString().toLowerCase())}"></span> <span th:text="${#temporals.format(day, 'dd MMM')}">Date</span>
         </div>
     </div>
 
-
-    <div class="grid grid-cols-8 gap-2 pl-12 pr-12">
+    <div class="grid grid-cols-8 pr-12" th:each="time : ${timeSlots}">
         
-        <div> </div>
+        <div class="text-right pr-2 text-sm font-medium" th:text="${time}"
+            th:classappend="${time.minute == 0 ? '' : ''}"
+            th:if="${time.minute == 0}">
+        </div>
 
-        <div class="pb-2 text-sm"> Sunday: </div>
-        <div class="pb-2 text-sm"> Monday: </div>
-        <div class="pb-2 text-sm"> Tuesday: </div>
-        <div class="pb-2 text-sm"> Wednesday: </div>
-        <div class="pb-2 text-sm"> Thursday: </div>
-        <div class="pb-2 text-sm"> Friday: </div>
-        <div class="pb-2 text-sm"> Saturday: </div>
-    </div>
+        <div th:if="${time.minute == 30}" class="grid grid-cols-8 gap-2 pr-12">
+            <p class="invisible">.</p>
+        </div>
 
-    <div class="grid grid-cols-8 gap-2 pl-12 pr-12" th:each="time : ${timeSlots}">
-        
-        <div class="text-right pr-2" th:text="${time}"></div>
+        <div th:each="day : ${weekDays}" 
+            class="border-gray-200 overflow-hidden"
+            th:classappend="${time.minute == 0 ? 'border-t border-r' : 'border-gray-300 border-r'}">
+            
+            <div th:if="${eventMap.get(day).get(time) != null}" 
+             th:classappend="${eventMap.get(day).get(time).size() == 2 ? 'grid grid-cols-2' : ''}" class="group">
 
-        <div th:each="day : ${weekDays}"> 
-            <div th:if="${eventMap.get(day).get(time) != null}" th:each="event : ${eventMap.get(day).get(time)}"
-            th:classappend="${eventMap.get(day).get(time) != null ? 'bg-green-200 border-0' : ''}">
-                <p th:if="${event.getStartTime().equals(time)}" th:text="${event.getTitle()}">
-                </p>
-
-                <p th:if="${!event.getStartTime().equals(time)}">
-                    bingus
-                </p>
-                
+                <div th:each="event : ${eventMap.get(day).get(time)}" class="bg-green-200">
+                    <a th:href="@{/events/{eventId}(eventId=${event.id})}">
+                        <div th:if="${event.getStartTime().equals(time)}" th:text="${event.getTitle()}" class="border-t border-l border-r border-black overflow-hidden whitespace-nowrap truncate px-1 text-sm"></div>
+                        <div th:if="${event}" class=""></div>
+                        <div th:if="${!event.getStartTime().equals(time)}" class="border-l border-r border-black min-h-6"></div>
+                        <div th:if="${event.getEndTime().minusMinutes(30).equals(time)}" class="border-black border"></div>
+                    </a>
+                </div>
+            
+            
             </div>
+
         </div>
     </div>
-
-
-
-    <p>
-        model.addAttribute("weekDays", daysOfWeek);
-        model.addAttribute("timeSlots", timeList);
-        model.addAttribute("eventMap", eventMap);
-
-
-
-    </p>
-
 
 </body>
-
 </html>
-

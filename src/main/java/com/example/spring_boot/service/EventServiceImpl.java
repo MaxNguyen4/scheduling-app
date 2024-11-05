@@ -102,9 +102,6 @@ public class EventServiceImpl implements EventService  {
 
         endOfWeek = startOfWeek.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
 
-        System.out.println(startOfWeek);
-        System.out.println(endOfWeek);
-
         return getEventsBetweenDates(startOfWeek, endOfWeek);
     }
 
@@ -177,8 +174,8 @@ public class EventServiceImpl implements EventService  {
     @Override
     public List<LocalTime> getTimeList() {
         List<LocalTime> timeList = new ArrayList<>();
-        LocalTime time = LocalTime.of(6, 0);
-        LocalTime endTime = LocalTime.MIDNIGHT;
+        LocalTime time = LocalTime.of(8, 0);
+        LocalTime endTime = LocalTime.of(22, 0);
 
         while (!time.equals(endTime)) {
             timeList.add(time);
@@ -189,17 +186,42 @@ public class EventServiceImpl implements EventService  {
     }
 
     @Override
-    public LocalTime roundToNearestQuarterHour(LocalTime time) {
+    public LocalTime roundToNearestHalfHour(LocalTime time) {
         int minute = time.getMinute();
-        int roundedMinutes = (minute + 7) / 15 * 15;
-        return time.withMinute(roundedMinutes).withSecond(0).withNano(0);
+        if (minute >= 45) {
+            time = time.plusHours(1).withMinute(0);
+        }
+        else if (minute == 30 || minute == 0) {
+        }
+        else if (minute >= 15) {
+            time = time.withMinute(30);
+        }
+        else {
+            time = time.withMinute(0);
+
+        }
+        return time;
     }
 
     @Override
     public Collection<Event> roundTime(Collection<Event> events) {
         for (Event event : events) {
-            event.setStartTime(roundToNearestQuarterHour(event.getStartTime()));
-            event.setEndTime(roundToNearestQuarterHour(event.getEndTime()));
+            event.setStartTime(roundToNearestHalfHour(event.getStartTime()));
+            event.setEndTime(roundToNearestHalfHour(event.getEndTime()));
+
+            System.out.println(event.getStartTime());
+            System.out.println(event.getEndTime());
+
+            if (event.getStartTime().equals(event.getEndTime())) {
+                int minute = event.getEndTime().getMinute();
+
+                if (minute >= 30) {
+                    event.setEndTime(event.getEndTime().plusHours(1).withMinute(0));
+                }
+                else {
+                    event.setEndTime(event.getEndTime().withMinute(30));
+                }
+            }
         }
         return events;
     }
@@ -212,7 +234,7 @@ public class EventServiceImpl implements EventService  {
         LocalTime timeStart = event.getStartTime();
         LocalTime timeEnd = event.getEndTime();
 
-        if (timeSlot.equals(timeStart) || timeSlot.equals((timeEnd.minusMinutes(15)))) {
+        if (timeSlot.equals(timeStart) || timeSlot.equals((timeEnd.minusMinutes(30)))) {
             result = true;
         }
         else if (timeSlot.isAfter(timeStart) && timeSlot.isBefore(timeEnd)) {
@@ -224,6 +246,12 @@ public class EventServiceImpl implements EventService  {
 
         return result;
     }
+
+    @Override
+    public int getTimeSlots(Event event) {
+        return 1;
+    }
+
 
     
 

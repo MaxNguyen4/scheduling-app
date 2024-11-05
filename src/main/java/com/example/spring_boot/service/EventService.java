@@ -24,8 +24,9 @@ public interface EventService {
     public LocalDate getStartOfWeek(LocalDate date);
     public List<LocalDate> getDaysOfWeek(LocalDate date);
     public List<LocalTime> getTimeList();
-    public LocalTime roundToNearestQuarterHour(LocalTime time);
+    public LocalTime roundToNearestHalfHour(LocalTime time);
     public Collection<Event> roundTime(Collection<Event> events);
     public boolean isInTimeFrame(Event event, LocalTime timeSlot);
+    public int getTimeSlots(Event event);
 
 }
