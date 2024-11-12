@@ -38,11 +38,13 @@ public class WeeklyViewController {
     @GetMapping("/{weekOffset}")
     public String newWeek(Model model, @PathVariable int weekOffset) {
 
-        LocalDate startOfWeek = service.getStartOfWeek(LocalDate.of(2024, 10, 13).plusWeeks(weekOffset));
+        Long userId = securityUtils.getAuthenticatedUserId();
+
+        LocalDate startOfWeek = service.getStartOfWeek(LocalDate.now().plusWeeks(weekOffset));
 
         List<LocalDate> daysOfWeek = service.getDaysOfWeek(startOfWeek);
         List<LocalTime> timeList = service.getTimeList();
-        Collection<Event> events = service.getEventsForWeek(startOfWeek);
+        Collection<Event> events = service.getEventsForWeekByUserId(startOfWeek, userId);
         
         events = service.roundTime(events);
 

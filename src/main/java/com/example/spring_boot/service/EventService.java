@@ -11,7 +11,8 @@ public interface EventService {
     public Collection<Event> getEventsByUserId(Long id);
     public Collection<Event> getEventsBetweenDates(LocalDate startDate, LocalDate endDate);
     public Collection<Event> getEventsForMonth(LocalDate date);
-    public Collection<Event> getEventsForWeek(LocalDate date);
+    public Collection<Event> getEventsForWeekByUserId(LocalDate date, Long id);
+    public Collection<Event> getEventsForDayByUserId(LocalDate date, Long id);
     public Collection<Event> getEventsBetweenDatesByUserId(LocalDate startDate, LocalDate endDate, Long id);
     public Collection<Event> getEventsForMonthByUserId(LocalDate date, Long id);
     public Event getEvent(Long eventId);
@@ -28,5 +29,6 @@ public interface EventService {
     public Collection<Event> roundTime(Collection<Event> events);
     public boolean isInTimeFrame(Event event, LocalTime timeSlot);
     public int getTimeSlots(Event event);
+    public boolean isClashing(Event event, Event event2);
 
 }

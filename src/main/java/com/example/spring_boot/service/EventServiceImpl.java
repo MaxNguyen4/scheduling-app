@@ -91,7 +91,7 @@ public class EventServiceImpl implements EventService  {
     }
 
     @Override
-    public Collection<Event> getEventsForWeek(LocalDate date) {
+    public Collection<Event> getEventsForWeekByUserId(LocalDate date, Long id) {
 
         LocalDate startOfWeek = date;
         LocalDate endOfWeek;
@@ -102,7 +102,14 @@ public class EventServiceImpl implements EventService  {
 
         endOfWeek = startOfWeek.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
 
-        return getEventsBetweenDates(startOfWeek, endOfWeek);
+        return getEventsBetweenDatesByUserId(startOfWeek, endOfWeek, id);
+    }
+
+    @Override
+    public Collection<Event> getEventsForDayByUserId(LocalDate date, Long id) {
+
+        return getEventsBetweenDatesByUserId(date, date, id);
+
     }
 
 
@@ -209,9 +216,6 @@ public class EventServiceImpl implements EventService  {
             event.setStartTime(roundToNearestHalfHour(event.getStartTime()));
             event.setEndTime(roundToNearestHalfHour(event.getEndTime()));
 
-            System.out.println(event.getStartTime());
-            System.out.println(event.getEndTime());
-
             if (event.getStartTime().equals(event.getEndTime())) {
                 int minute = event.getEndTime().getMinute();
 
@@ -252,8 +256,34 @@ public class EventServiceImpl implements EventService  {
         return 1;
     }
 
+    // Assumes events are rounded
+    @Override
+    public boolean isClashing(Event event, Event event2) {
+        LocalTime eventStart1 = event.getStartTime();
+        LocalTime eventEnd1 = event.getEndTime();
+        LocalTime eventStart2 = event2.getStartTime();
+        LocalTime eventEnd2 = event2.getEndTime();
+        boolean result;
 
-    
+        if (eventStart1.isAfter(eventStart2) && eventStart1.isBefore(eventEnd2)) {
+            result = true; 
+        }
+        else if (eventStart2.isAfter(eventStart1) && eventStart2.isBefore(eventEnd1)) {
+            result = true;
+        }
+        else if (eventStart1.equals(eventStart2) || eventEnd1.equals(eventEnd2)) {
+            result = true;
+        }
+        else {
+            result = false;
+        }
+
+        return result;
+    }
+
+
+    //(1, 'Morning Standup', '2024-11-12', '09:30:00', '10:00:00', 'Daily team sync-up'),
+//(1, 'Design Review', '2024-11-12', '10:00:00', '11:00:00', 'Review design progress with the team'),
 
 
 }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" content="width=device-width, initial-scale=1.0"> 
+    <link href="/css/tailwind.css" rel="stylesheet" >
+</head>
+
+
+<body class="bg-gray-100 p-4">
+    <div class="bg-white rounded-lg shadow-md pb-2">
+
+        <div class="flex justify-between items-center mb-8 pt-4">
+
+            <div>
+                <a th:href="@{/week/0}" class="pl-12">
+                    view
+                </a>
+            </div>
+
+            <div class="flex justify-center">
+                <a>
+                    ←
+                </a>
+
+                <h2 class="text-lg font-bold px-6 w-72 text-center">
+                </h2>
+
+                <a>
+                    →
+                </a>
+            </div>
+
+            <div>
+                <a th:href="@{/user/login}"> account</a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-[1fr_2fr]">
+            <div class="border-r border-black">
+                <p> Should cover full height</p>
+            </div>
+
+            <div class="grid grid-cols-[1fr_5fr]" th:each="time : ${timeList}">
+
+                <div th:text="${time}">
+
+                </div>
+
+
+                <div class="grid" th:classappend="${'grid grid-cols-' + (eventColumns.size())}">
+                    <div th:each="eventColumn : ${eventColumns}">
+    
+                        <div th:each="event : ${eventColumn}">
+
+                            <div th:if="${event.startTime.equals(time)}"> GAH</div>
+
+                        </div>
+                        
+                    </div>
+    
+                </div>
+    
+            </div>
+
+  
+
+
+        </div>
+        
+
+
+    </div>
+</body>
+
+</html>
