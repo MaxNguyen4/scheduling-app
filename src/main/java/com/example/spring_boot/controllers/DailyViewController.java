@@ -36,7 +36,7 @@ public class DailyViewController {
 
         Long id = securityUtils.getAuthenticatedUserId();
 
-        LocalDate date = LocalDate.now();
+        LocalDate date = LocalDate.of(2024,11,12);
         Collection<Event> events = service.getEventsForDayByUserId(date, id);
         List<LocalTime> timeList = service.getTimeList();
         Collection<Event> roundedEvents = service.roundTime(events);

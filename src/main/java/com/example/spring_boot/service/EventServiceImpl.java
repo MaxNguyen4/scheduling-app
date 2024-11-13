@@ -281,9 +281,20 @@ public class EventServiceImpl implements EventService  {
         return result;
     }
 
+    // Assumes events are rounded
+    @Override
+    public int getSpan(Event event) {
+        LocalTime startTime = event.getStartTime();
+        LocalTime endTime = event.getEndTime();
 
-    //(1, 'Morning Standup', '2024-11-12', '09:30:00', '10:00:00', 'Daily team sync-up'),
-//(1, 'Design Review', '2024-11-12', '10:00:00', '11:00:00', 'Review design progress with the team'),
+        int span = 0;
 
+        while (!startTime.equals(endTime)) {
+            startTime.plusMinutes(30);
+            span += 1;
+        }
+
+        return span;
+    }
 
 }

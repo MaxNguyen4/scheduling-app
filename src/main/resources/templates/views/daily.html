@@ -39,31 +39,39 @@
 
         <div class="grid grid-cols-[1fr_2fr]">
             <div class="border-r border-black">
-                <p> Should cover full height</p>
+                <div class="">
+                Should cover full height
+                </div>
             </div>
 
-            <div class="grid grid-cols-[1fr_5fr]" th:each="time : ${timeList}">
-
-                <div th:text="${time}">
-
-                </div>
-
-
-                <div class="grid" th:classappend="${'grid grid-cols-' + (eventColumns.size())}">
-                    <div th:each="eventColumn : ${eventColumns}">
-    
-                        <div th:each="event : ${eventColumn}">
-
-                            <div th:if="${event.startTime.equals(time)}"> GAH</div>
-
-                        </div>
+            <div>
+                <!-- Outer container for all time and event rows -->
+                <div class="grid grid-rows-[repeat(28,_minmax(0,_1fr))]">
+                    
+                    <!-- Loop over each time entry, creating a new grid row for each -->
+                    <div th:each="time : ${timeList}" class="grid grid-cols-[1fr_5fr] items-center border-b">
                         
+                        <!-- Time Column (fixed in the first column for each time) -->
+                        <div class="col-span-1 p-2 border-r border-black" th:text="${time}">
+                            <!-- Time entries display here -->
+                        </div>
+            
+                        <!-- Events Column (starts in the second column for each time) -->
+                        <div class="grid col-span-1 p-2" th:classappend="${'grid grid-cols-' + (eventColumns.size())}">
+                            <div th:each="eventColumn : ${eventColumns}">
+                                <div th:each="event : ${eventColumn}">
+                                    <!-- Display event only if its start time matches the current "time" -->
+                                    <div class="bg-green-200" th:if="${event.startTime.equals(time)}">
+                                        GAH
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-    
                 </div>
-    
             </div>
-
+            
+            
   
 
 
