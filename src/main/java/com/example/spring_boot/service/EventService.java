@@ -30,6 +30,9 @@ public interface EventService {
     public boolean isInTimeFrame(Event event, LocalTime timeSlot);
     public int getTimeSlots(Event event);
     public boolean isClashing(Event event, Event event2);
-    public int getSpan(Event event);
+
+    public int getGridRow(Event event);
+    public int getGridColumn(Event event);
+    public int getRowSpan(Event event);
 
 }

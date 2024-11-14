@@ -281,20 +281,44 @@ public class EventServiceImpl implements EventService  {
         return result;
     }
 
+    @Override
+    public int getGridRow(Event event) {
+        int row = 0;
+
+        LocalTime startTime = event.getStartTime();
+        LocalTime timeSlot = LocalTime.of(8, 0);
+
+        while (!startTime.equals(timeSlot)) {
+            timeSlot = timeSlot.plusMinutes(30);
+            row += 1;
+        }
+
+        return row;
+    }
+
+    @Override
+    public int getGridColumn(Event event) {
+        LocalDate date = event.getDate();
+        int day = date.getDayOfWeek().getValue();
+
+        return day;
+    }
+
     // Assumes events are rounded
     @Override
-    public int getSpan(Event event) {
+    public int getRowSpan(Event event) {
         LocalTime startTime = event.getStartTime();
         LocalTime endTime = event.getEndTime();
 
         int span = 0;
 
         while (!startTime.equals(endTime)) {
-            startTime.plusMinutes(30);
+            startTime = startTime.plusMinutes(30);
             span += 1;
         }
 
         return span;
     }
+
 
 }

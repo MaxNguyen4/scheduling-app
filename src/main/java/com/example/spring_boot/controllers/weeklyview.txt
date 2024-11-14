@@ -46,56 +46,38 @@ public class WeeklyViewController {
         List<LocalTime> timeList = service.getTimeList();
         Collection<Event> events = service.getEventsForWeekByUserId(startOfWeek, userId);
         
-        Collection<Event> roundedEvents = service.roundTime(events);
+        events = service.roundTime(events);
 
-        HashMap<Event, int[]> eventMap = new HashMap<>();
+        Map<LocalDate, Map<LocalTime, List<Event>>> eventMap = new HashMap<>();
+        for (LocalDate day : daysOfWeek) {
+            eventMap.put(day, new HashMap<>());
 
-        for (Event event : roundedEvents) {
-            int conflicts = 0;
-            int conflictPosition = 1;
+            for (LocalTime time : timeList) {
+                eventMap.get(day).put(time, new ArrayList<Event>());
+            }
+        }
 
-            for (Event otherEvent : roundedEvents) {
-                if (event != otherEvent) {
-                    if (event.getDate().equals(otherEvent.getDate())) {
-
-                        if (service.isClashing(otherEvent, event)) {
-                            conflicts += 1;
-
-                            if (otherEvent.getStartTime().isBefore(event.getStartTime())) {
-                                conflictPosition += 1;
-                            }
+        for (Event event : events) {
+            LocalDate eventDate = event.getDate();
+            LocalTime startTime = event.getStartTime();
+            LocalTime endTime = event.getEndTime();
+            LocalTime timeSlot = startTime;
+    
+            while (!timeSlot.isAfter(endTime)) {
+                if (eventMap.containsKey(eventDate)) {
+                    if (eventMap.get(eventDate).containsKey(timeSlot)) {
+                        if (service.isInTimeFrame(event, timeSlot)) {
+                            eventMap.get(eventDate).get(timeSlot).add(event);
                         }
                     }
                 }
+                timeSlot = timeSlot.plusMinutes(30);
             }
-
-            eventMap.put(event, new int[] {
-                service.getGridColumn(event),
-                service.getGridRow(event),
-                service.getRowSpan(event),
-                conflicts,
-                conflictPosition
-            });
         }
 
-        for (Map.Entry<Event, int[]> entry : eventMap.entrySet()) {
-            Event event = entry.getKey();
-            int[] values = entry.getValue();
-        
-            System.out.println("Event: " + event.getTitle()); // Customize this to print relevant details of the Event
-            System.out.println("Grid Column: " + values[0]);
-            System.out.println("Grid Row: " + values[1]);
-            System.out.println("Row Span: " + values[2]);
-            System.out.println("Conflicts: " + values[3]);
-            System.out.println("Conflict Position: " + values[4]);
-            System.out.println("----------------------------------");
-        }
-        
-
-        
-
-        model.addAttribute("timeSlots", timeList);
         model.addAttribute("weekDays", daysOfWeek);
+        model.addAttribute("timeSlots", timeList);
+        model.addAttribute("eventMap", eventMap);
 
         return "views/weeklynew";
     }

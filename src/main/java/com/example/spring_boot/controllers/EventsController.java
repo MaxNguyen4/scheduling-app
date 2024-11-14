@@ -32,13 +32,14 @@ public class EventsController {
     @GetMapping("/{eventId}")
 	@PreAuthorize("@securityUtils.getAuthenticatedUserId() == @eventService.getEvent(#eventId).userId")
 	public String event(Model model, @PathVariable Long eventId, HttpSession session, HttpServletRequest request) {
-		Event event = service.getEvent(eventId);
-		int monthOffset = service.getMonthOffset(event);
 
 		String referer = request.getHeader("Referer");
 		if (referer != null) {
 			request.getSession().setAttribute("previousPage", referer);
 		}
+
+		Event event = service.getEvent(eventId);
+		int monthOffset = service.getMonthOffset(event);
 
 		model.addAttribute("event", event);
 		model.addAttribute("monthOffset", monthOffset);
@@ -60,7 +61,13 @@ public class EventsController {
 	}
 
 	@GetMapping("/add")
-	public String addEvent(@RequestParam LocalDate date, @RequestParam int monthOffset, Model model, HttpSession session) {
+	public String addEvent(@RequestParam LocalDate date, @RequestParam int monthOffset, Model model, HttpSession session, HttpServletRequest request) {
+
+		String referer = request.getHeader("Referer");
+		if (referer != null) {
+			request.getSession().setAttribute("previousPage", referer);
+		}
+
 		Event event = new Event();
 		event.setDate(date);
 		event.setStartTime(LocalTime.of(0, 0));
@@ -73,23 +80,32 @@ public class EventsController {
 	}
 
     @PostMapping("/add")
-	public String addEvent(@ModelAttribute("event") Event event) {
+	public String addEvent(@ModelAttribute("event") Event event, HttpServletRequest request) {
+
+		String previousPage = (String) request.getSession().getAttribute("previousPage");
+    	request.getSession().removeAttribute("previousPage");
+
 		Long userId = securityUtils.getAuthenticatedUserId();
 		int monthOffset = service.getMonthOffset(event);
 		
 		service.addEvent(userId, event.getTitle(), event.getDate(), event.getStartTime(), event.getEndTime(), event.getDetails());
 
-		return "redirect:/month/" + monthOffset;
+		return previousPage != null ? "redirect:" + previousPage : "redirect:/month/" + monthOffset;
 	}
 
 	@GetMapping("/delete/{eventId}")
 	@PreAuthorize("@securityUtils.getAuthenticatedUserId() == @eventService.getEvent(#eventId).userId")
-	public String deleteEvent(@PathVariable("eventId") Long eventId, HttpSession session) {
-		Event event = service.getEvent(eventId);
+	public String deleteEvent(@PathVariable("eventId") Long eventId, HttpSession session, HttpServletRequest request) {
+    	Event event = service.getEvent(eventId);
+
 		int monthOffset = service.getMonthOffset(event);
 
 		service.deleteEvent(eventId);
 
-		return "redirect:/month/" + monthOffset;
+		String previousPage = (String) request.getSession().getAttribute("previousPage");
+		request.getSession().removeAttribute("previousPage");
+
+		return previousPage != null ? "redirect:" + previousPage : "redirect:/month/" + monthOffset;
+
 	}
 }

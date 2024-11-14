@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/tailwind.css" rel="stylesheet">
+</head>
+
+<body class="p-4 bg-gray-100">
+
+    <div class="bg-white rounded-lg shadow-md pb-2">
+        <div class="flex justify-between items-center mb-8 pl-12 pt-4">
+            <div>
+                <a th:href="@{/month/0}" class="">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                        Month view
+                    </button>
+                </a>
+            </div>
+
+            <div class="flex justify-center items-center">
+                <a th:href="@{/week/{weekOffset}(weekOffset=${weekOffset - 1})}">
+                    ←
+                </a>
+                <h2 class="text-lg font-bold px-6 w-72 text-center">
+                    Week of <span th:text="${#temporals.format(weekDays[0], 'dd MMM')}">Start Date</span> - <span th:text="${#temporals.format(weekDays[6], 'dd MMM')}">End Date</span>
+                </h2>
+                <a th:href="@{/week/{weekOffset}(weekOffset=${weekOffset + 1})}">
+                    →
+                </a>
+            </div>
+
+            <div>
+                <a th:href="@{/user/logout}" class="pr-12">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                        Logout
+                    </button>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="grid grid-cols-[1fr_11fr] grid-rows-[repeat(28,_minmax(0,_1fr))]">
+
+            <div th:each="time : ${timeSlots}" th:text="${time}" class="col-start-1">
+            </div>
+
+            <div>
+                <p> groi</p>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+</html>
+
+
