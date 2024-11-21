@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpClientErrorException.Conflict;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -48,54 +49,25 @@ public class WeeklyViewController {
         
         Collection<Event> roundedEvents = service.roundTime(events);
 
-        HashMap<Event, int[]> eventMap = new HashMap<>();
+        List<ConflictGroup> conflictGroups = service.getConflictMapping(roundedEvents);
 
-        for (Event event : roundedEvents) {
-            int conflicts = 0;
-            int conflictPosition = 1;
+        for (ConflictGroup conflictGroup : conflictGroups) {
+            System.out.println("GROUP -------------");
 
-            for (Event otherEvent : roundedEvents) {
-                if (event != otherEvent) {
-                    if (event.getDate().equals(otherEvent.getDate())) {
+            for (SubGroup subGroups : conflictGroup.getSubGroups()) {
+                System.out.println("Subgroup ---");
 
-                        if (service.isClashing(otherEvent, event)) {
-                            conflicts += 1;
-
-                            if (otherEvent.getStartTime().isBefore(event.getStartTime())) {
-                                conflictPosition += 1;
-                            }
-                        }
-                    }
+                for (Event event : subGroups.getEvents()) {
+                    System.out.println("event");
+                    System.out.println(event.getTitle());
                 }
             }
 
-            eventMap.put(event, new int[] {
-                service.getGridColumn(event),
-                service.getGridRow(event),
-                service.getRowSpan(event),
-                conflicts,
-                conflictPosition
-            });
         }
 
-        for (Map.Entry<Event, int[]> entry : eventMap.entrySet()) {
-            Event event = entry.getKey();
-            int[] values = entry.getValue();
         
-            System.out.println("Event: " + event.getTitle()); // Customize this to print relevant details of the Event
-            System.out.println("Grid Column: " + values[0]);
-            System.out.println("Grid Row: " + values[1]);
-            System.out.println("Row Span: " + values[2]);
-            System.out.println("Conflicts: " + values[3]);
-            System.out.println("Conflict Position: " + values[4]);
-            System.out.println("----------------------------------");
-        }
-        
-
-        
-
         model.addAttribute("timeSlots", timeList);
-        model.addAttribute("weekDays", daysOfWeek);
+        model.addAttribute("weekDays", daysOfWeek); 
 
         return "views/weeklynew";
     }
@@ -107,5 +79,5 @@ public class WeeklyViewController {
 hashmap:
 key = event:
 
-value = array [column number, row start, row span, number of conflicts, which number of conflict]
+value = array [column number, row start, row span, sub column]
 */

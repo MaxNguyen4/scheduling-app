@@ -111,17 +111,7 @@
 					</execution>
 
 					<!-- Run npm run build -->
-					<execution>
-						<id>npm build</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<phase>generate-resources</phase>
-						<configuration>
-							<arguments>run build:css</arguments>
-							<workingDirectory>src/main/frontend</workingDirectory> <!-- Set working directory -->
-						</configuration>
-					</execution>
+					
 
 
 				</executions>

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import com.example.spring_boot.models.Event;
+import com.example.spring_boot.models.*;
 
 public interface EventService {
     public Collection<Event> getAllEvents();
@@ -27,12 +27,11 @@ public interface EventService {
     public List<LocalTime> getTimeList();
     public LocalTime roundToNearestHalfHour(LocalTime time);
     public Collection<Event> roundTime(Collection<Event> events);
-    public boolean isInTimeFrame(Event event, LocalTime timeSlot);
-    public int getTimeSlots(Event event);
-    public boolean isClashing(Event event, Event event2);
 
     public int getGridRow(Event event);
     public int getGridColumn(Event event);
     public int getRowSpan(Event event);
+
+    public List<ConflictGroup> getConflictMapping(Collection<Event> events);
 
 }
