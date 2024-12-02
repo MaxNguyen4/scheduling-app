@@ -230,45 +230,6 @@ public class EventServiceImpl implements EventService  {
         return events;
     }
 
-    @Override
-    public int getGridRow(Event event) {
-        int row = 0;
-
-        LocalTime startTime = event.getStartTime();
-        LocalTime timeSlot = LocalTime.of(8, 0);
-
-        while (!startTime.equals(timeSlot)) {
-            timeSlot = timeSlot.plusMinutes(30);
-            row += 1;
-        }
-
-        return row;
-    }
-
-    @Override
-    public int getGridColumn(Event event) {
-        LocalDate date = event.getDate();
-        int day = date.getDayOfWeek().getValue();
-
-        return day;
-    }
-
-    // Assumes events are rounded
-    @Override
-    public int getRowSpan(Event event) {
-        LocalTime startTime = event.getStartTime();
-        LocalTime endTime = event.getEndTime();
-
-        int span = 0;
-
-        while (!startTime.equals(endTime)) {
-            startTime = startTime.plusMinutes(30);
-            span += 1;
-        }
-
-        return span;
-    }
-
     public List<ConflictGroup> getConflictMapping(Collection<Event> events) {
 
         List<Event> eventsList = (events instanceof List)
@@ -279,15 +240,19 @@ public class EventServiceImpl implements EventService  {
 
         List<ConflictGroup> conflictGroups = new ArrayList<ConflictGroup>();
 
-        ConflictGroup initGroup = new ConflictGroup(eventsList.get(0));
+        if (!events.isEmpty()) {
+            ConflictGroup initGroup = new ConflictGroup(eventsList.get(0));
+            conflictGroups.add(initGroup);
+        }
+        else {
+            return conflictGroups;
+        }
 
-        conflictGroups.add(initGroup);
 
         for (int i = 1; i < eventsList.size(); ++i) {
             
             Event event = eventsList.get(i);
 
-            System.out.println(event.getTitle());
             boolean placed = false;
 
             for (ConflictGroup conflictGroup : conflictGroups) {
@@ -304,7 +269,7 @@ public class EventServiceImpl implements EventService  {
             }
 
         }
-
+    
         return conflictGroups; 
     }
 

@@ -52,17 +52,20 @@ public class ConflictGroup {
         return this.subGroups;
     }
 
+    public int getSize() {
+        return this.subGroups.size();
+    }
+
+    public SubGroup getSubGroup(int i) {
+        return subGroups.get(i);
+    }
+
     public boolean addToConflictGroup(Event event) {
 
         boolean result = false;
 
         LocalTime startTime = event.getStartTime();
         LocalTime endTime = event.getEndTime();
-
-        System.out.println("range before adjustment");
-        System.out.println(minTime.toString());
-        System.out.print("-");
-        System.out.println(maxTime.toString());
 
         // 4 clash cases
 
@@ -73,12 +76,10 @@ public class ConflictGroup {
         if (startTime.isBefore(minTime) && endTime.isAfter(minTime)) {
             this.minTime = startTime;
             result = true;
-            System.out.println("left overlap");
 
             // larger overlap from min max on both sides
             if (endTime.isAfter(maxTime)) {
                 this.maxTime = endTime;
-                System.out.println("double overlap");
 
             }
         }
@@ -87,37 +88,22 @@ public class ConflictGroup {
         if (endTime.isAfter(maxTime) && startTime.isBefore(maxTime)) {
             this.maxTime = endTime;
             result = true;
-            System.out.println("right overlap");
 
         }
 
         // perfect overlap or tiny overlap inside min max
         if ((startTime.equals(minTime) && endTime.equals(maxTime)) || (startTime.isAfter(minTime) && endTime.isBefore(maxTime))) {
             result = true;
-            System.out.println("perfect / small overlap");
 
         }
 
 
 
         if (!result) {
-            System.out.println("no conflicts with this group");
             return false;
         }
 
-        System.out.println("conflicts EXISTS");
 
-        System.out.println("event range");
-        System.out.print(event.getStartTime().toString());
-        System.out.print("-");
-        System.out.println(event.getEndTime());
-
-        System.out.println("conflict group range =");
-        System.out.print(minTime.toString());
-        System.out.print("-");
-        System.out.println(maxTime.toString());
-
-        
 
 
         boolean placedInSubGroup = false;
@@ -128,7 +114,6 @@ public class ConflictGroup {
                 placedInSubGroup = subGroup.addToSubGroup(event);
 
                 if (placedInSubGroup) {
-                    System.out.println("placed in existing subgroup");
                     return true;
                 }
 

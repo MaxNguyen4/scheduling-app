@@ -70,11 +70,9 @@ public class SubGroup {
 
         if (!conflicts) {
             result = true;
-            System.out.println("subgroup no conflict! yay! adding to subgroup");
             events.add(event);
         }
 
-        System.out.println("conflict exists, moving to next subgroup");
 
        
         return result;

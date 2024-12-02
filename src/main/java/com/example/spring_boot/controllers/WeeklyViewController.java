@@ -44,34 +44,87 @@ public class WeeklyViewController {
         LocalDate startOfWeek = service.getStartOfWeek(LocalDate.now().plusWeeks(weekOffset));
 
         List<LocalDate> daysOfWeek = service.getDaysOfWeek(startOfWeek);
+
         List<LocalTime> timeList = service.getTimeList();
-        Collection<Event> events = service.getEventsForWeekByUserId(startOfWeek, userId);
+
+        List<List<ConflictGroup>> weekConflictGroups = new ArrayList<>();
+
+        // Initialising conflict mapping for each individual day
+
+        for (LocalDate day : daysOfWeek) {
+
+            Collection<Event> events = service.getEventsForDayByUserId(day, userId);
+            Collection<Event> roundedEvents = service.roundTime(events);
+            List<ConflictGroup> conflictGroups = service.getConflictMapping(roundedEvents);
+
+            weekConflictGroups.add(conflictGroups);
+        }
         
-        Collection<Event> roundedEvents = service.roundTime(events);
+        
 
-        List<ConflictGroup> conflictGroups = service.getConflictMapping(roundedEvents);
+        for (List<ConflictGroup> conflictGroups : weekConflictGroups) {
+            
+            
+            for (ConflictGroup conflictGroup : conflictGroups) {
 
-        for (ConflictGroup conflictGroup : conflictGroups) {
-            System.out.println("GROUP -------------");
+                for (SubGroup subGroups : conflictGroup.getSubGroups()) {
 
-            for (SubGroup subGroups : conflictGroup.getSubGroups()) {
-                System.out.println("Subgroup ---");
+                    for (Event event : subGroups.getEvents()) {
+                    }
+                }
+            
+            }
+        }
 
-                for (Event event : subGroups.getEvents()) {
-                    System.out.println("event");
-                    System.out.println(event.getTitle());
+        HashMap<Event, int[]> eventMap = new HashMap<>();
+
+        for (int dayNumber = 0; dayNumber < weekConflictGroups.size(); ++dayNumber) {
+
+            System.out.print("day Number: ");
+            System.out.println(dayNumber);
+
+
+            List<ConflictGroup> conflictGroups = weekConflictGroups.get(dayNumber);
+
+            for (ConflictGroup conflictGroup : conflictGroups) {
+
+                for (int subGroupNumber = 0; subGroupNumber < conflictGroup.getSize(); ++subGroupNumber) {
+
+                    SubGroup subGroup = conflictGroup.getSubGroup(subGroupNumber);
+                    
+                    for (Event event : subGroup.getEvents()) {
+
+                        System.out.println(event.getTitle());
+
+                        System.out.print(dayNumber + " ");
+                        System.out.print(event.getRowStart() + " ");
+                        System.out.print(event.getRowSpan() + " ");
+                        System.out.print(subGroupNumber + " ");
+                        System.out.println(conflictGroup.getSize());
+
+                        eventMap.put(event, new int[] {
+                            dayNumber,
+                            event.getRowStart(),
+                            event.getRowSpan(),
+                            subGroupNumber,
+                            conflictGroup.getSize()
+                        });
+
+                    }
                 }
             }
 
         }
 
         
+
+        
         model.addAttribute("timeSlots", timeList);
         model.addAttribute("weekDays", daysOfWeek); 
+        model.addAttribute("eventMap", eventMap);
 
         return "views/weeklynew";
     }
-
     
 }
 
@@ -79,5 +132,5 @@ public class WeeklyViewController {
 hashmap:
 key = event:
 
-value = array [column number, row start, row span, sub column]
+value = array [column number, row start, row span, sub column, total sub columns]
 */

@@ -28,10 +28,6 @@ public interface EventService {
     public LocalTime roundToNearestHalfHour(LocalTime time);
     public Collection<Event> roundTime(Collection<Event> events);
 
-    public int getGridRow(Event event);
-    public int getGridColumn(Event event);
-    public int getRowSpan(Event event);
-
     public List<ConflictGroup> getConflictMapping(Collection<Event> events);
 
 }
