@@ -4,11 +4,11 @@ import java.util.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 
 import org.springframework.stereotype.Service;
 
+import com.example.spring_boot.models.ConflictGroup;
 import com.example.spring_boot.models.Event;
 import com.example.spring_boot.repository.EventRepositoryImpl;
 
@@ -230,71 +230,48 @@ public class EventServiceImpl implements EventService  {
         return events;
     }
 
-    @Override
-    public boolean isInTimeFrame(Event event, LocalTime timeSlot) {
+    public List<ConflictGroup> getConflictMapping(Collection<Event> events) {
 
-        boolean result;
+        List<Event> eventsList = (events instanceof List)
+            ? (List<Event>) events
+            : new ArrayList<>(events);
 
-        LocalTime timeStart = event.getStartTime();
-        LocalTime timeEnd = event.getEndTime();
+        eventsList.sort(Comparator.comparing(Event::getStartTime));
 
-        if (timeSlot.equals(timeStart) || timeSlot.equals((timeEnd.minusMinutes(30)))) {
-            result = true;
-        }
-        else if (timeSlot.isAfter(timeStart) && timeSlot.isBefore(timeEnd)) {
-            result = true;
-        }
-        else {
-            result = false;
-        }
+        List<ConflictGroup> conflictGroups = new ArrayList<ConflictGroup>();
 
-        return result;
-    }
-
-    @Override
-    public int getTimeSlots(Event event) {
-        return 1;
-    }
-
-    // Assumes events are rounded
-    @Override
-    public boolean isClashing(Event event, Event event2) {
-        LocalTime eventStart1 = event.getStartTime();
-        LocalTime eventEnd1 = event.getEndTime();
-        LocalTime eventStart2 = event2.getStartTime();
-        LocalTime eventEnd2 = event2.getEndTime();
-        boolean result;
-
-        if (eventStart1.isAfter(eventStart2) && eventStart1.isBefore(eventEnd2)) {
-            result = true; 
-        }
-        else if (eventStart2.isAfter(eventStart1) && eventStart2.isBefore(eventEnd1)) {
-            result = true;
-        }
-        else if (eventStart1.equals(eventStart2) || eventEnd1.equals(eventEnd2)) {
-            result = true;
+        if (!events.isEmpty()) {
+            ConflictGroup initGroup = new ConflictGroup(eventsList.get(0));
+            conflictGroups.add(initGroup);
         }
         else {
-            result = false;
+            return conflictGroups;
         }
 
-        return result;
-    }
 
-    // Assumes events are rounded
-    @Override
-    public int getSpan(Event event) {
-        LocalTime startTime = event.getStartTime();
-        LocalTime endTime = event.getEndTime();
+        for (int i = 1; i < eventsList.size(); ++i) {
+            
+            Event event = eventsList.get(i);
 
-        int span = 0;
+            boolean placed = false;
 
-        while (!startTime.equals(endTime)) {
-            startTime.plusMinutes(30);
-            span += 1;
+            for (ConflictGroup conflictGroup : conflictGroups) {
+                placed = conflictGroup.addToConflictGroup(event);
+
+                if (placed) {
+                    break;
+                }
+            }
+
+            if (!placed) {
+                ConflictGroup newGroup = new ConflictGroup(event);
+                conflictGroups.add(newGroup);
+            }
+
         }
-
-        return span;
+    
+        return conflictGroups; 
     }
+
 
 }

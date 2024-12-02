@@ -43,46 +43,6 @@ public class DailyViewController {
 
         List<List<Event>> eventColumns = new ArrayList<>();
 
-
-        for (Event event : roundedEvents) {
-            boolean isPlaced = false;
-
-            for (List<Event> column : eventColumns) {
-
-                boolean hasClash = false;
-
-                for (Event columnEvent : column) {
-                    if (service.isClashing(event, columnEvent)) {
-                        hasClash = true;
-                        break;
-                    }
-                }
-                
-                if (!hasClash && !isPlaced) {
-                    column.add(event);
-                    isPlaced = true;
-                }
-
-            }
-
-            if (!isPlaced) {
-                List<Event> newColumn = new ArrayList<>();
-                newColumn.add(event);
-                eventColumns.add(newColumn);
-            }
-        
-        }
-
-        for (int i = 0; i < eventColumns.size(); i++) {
-            List<Event> column = eventColumns.get(i);
-            System.out.println("Column " + (i + 1) + ":");
-            for (Event event : column) {
-                System.out.println("  Event Title: " + event.getTitle() + 
-                                   ", Start: " + event.getStartTime() + 
-                                   ", End: " + event.getEndTime());
-            }
-        }
-
         model.addAttribute("eventColumns", eventColumns);
         model.addAttribute("timeList", timeList);
 

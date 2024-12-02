@@ -86,4 +86,32 @@ public class Event {
     public String getDetails() {
         return this.details;
     }
+
+    public int getRowSpan() {
+        int span = 0;
+
+        LocalTime tempTime = startTime;
+
+        while (!tempTime.equals(endTime)) {
+            tempTime = tempTime.plusMinutes(30);
+            span += 1;
+        }
+
+        return span;
+    }
+
+    public int getRowStart() {
+
+        int row = 0;
+
+        LocalTime timeSlot = LocalTime.of(8, 0);
+
+        while (!startTime.equals(timeSlot)) {
+            timeSlot = timeSlot.plusMinutes(30);
+            row += 1;
+        }
+
+        return row;
+
+    }
 }

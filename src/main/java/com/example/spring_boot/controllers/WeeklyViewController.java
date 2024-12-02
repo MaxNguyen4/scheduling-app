@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpClientErrorException.Conflict;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -43,44 +44,93 @@ public class WeeklyViewController {
         LocalDate startOfWeek = service.getStartOfWeek(LocalDate.now().plusWeeks(weekOffset));
 
         List<LocalDate> daysOfWeek = service.getDaysOfWeek(startOfWeek);
+
         List<LocalTime> timeList = service.getTimeList();
-        Collection<Event> events = service.getEventsForWeekByUserId(startOfWeek, userId);
-        
-        events = service.roundTime(events);
 
-        Map<LocalDate, Map<LocalTime, List<Event>>> eventMap = new HashMap<>();
+        List<List<ConflictGroup>> weekConflictGroups = new ArrayList<>();
+
+        // Initialising conflict mapping for each individual day
+
         for (LocalDate day : daysOfWeek) {
-            eventMap.put(day, new HashMap<>());
 
-            for (LocalTime time : timeList) {
-                eventMap.get(day).put(time, new ArrayList<Event>());
-            }
+            Collection<Event> events = service.getEventsForDayByUserId(day, userId);
+            Collection<Event> roundedEvents = service.roundTime(events);
+            List<ConflictGroup> conflictGroups = service.getConflictMapping(roundedEvents);
+
+            weekConflictGroups.add(conflictGroups);
         }
+        
+        
 
-        for (Event event : events) {
-            LocalDate eventDate = event.getDate();
-            LocalTime startTime = event.getStartTime();
-            LocalTime endTime = event.getEndTime();
-            LocalTime timeSlot = startTime;
-    
-            while (!timeSlot.isAfter(endTime)) {
-                if (eventMap.containsKey(eventDate)) {
-                    if (eventMap.get(eventDate).containsKey(timeSlot)) {
-                        if (service.isInTimeFrame(event, timeSlot)) {
-                            eventMap.get(eventDate).get(timeSlot).add(event);
-                        }
+        for (List<ConflictGroup> conflictGroups : weekConflictGroups) {
+            
+            
+            for (ConflictGroup conflictGroup : conflictGroups) {
+
+                for (SubGroup subGroups : conflictGroup.getSubGroups()) {
+
+                    for (Event event : subGroups.getEvents()) {
                     }
                 }
-                timeSlot = timeSlot.plusMinutes(30);
+            
             }
         }
 
-        model.addAttribute("weekDays", daysOfWeek);
+        HashMap<Event, int[]> eventMap = new HashMap<>();
+
+        for (int dayNumber = 0; dayNumber < weekConflictGroups.size(); ++dayNumber) {
+
+            System.out.print("day Number: ");
+            System.out.println(dayNumber);
+
+
+            List<ConflictGroup> conflictGroups = weekConflictGroups.get(dayNumber);
+
+            for (ConflictGroup conflictGroup : conflictGroups) {
+
+                for (int subGroupNumber = 0; subGroupNumber < conflictGroup.getSize(); ++subGroupNumber) {
+
+                    SubGroup subGroup = conflictGroup.getSubGroup(subGroupNumber);
+                    
+                    for (Event event : subGroup.getEvents()) {
+
+                        System.out.println(event.getTitle());
+
+                        System.out.print(dayNumber + " ");
+                        System.out.print(event.getRowStart() + " ");
+                        System.out.print(event.getRowSpan() + " ");
+                        System.out.print(subGroupNumber + " ");
+                        System.out.println(conflictGroup.getSize());
+
+                        eventMap.put(event, new int[] {
+                            dayNumber,
+                            event.getRowStart(),
+                            event.getRowSpan(),
+                            subGroupNumber,
+                            conflictGroup.getSize()
+                        });
+
+                    }
+                }
+            }
+
+        }
+
+        
+
+        
         model.addAttribute("timeSlots", timeList);
+        model.addAttribute("weekDays", daysOfWeek); 
         model.addAttribute("eventMap", eventMap);
 
-        return "views/weekly";
+        return "views/weeklynew";
     }
-
     
 }
+
+/* 
+hashmap:
+key = event:
+
+value = array [column number, row start, row span, sub column, total sub columns]
+*/

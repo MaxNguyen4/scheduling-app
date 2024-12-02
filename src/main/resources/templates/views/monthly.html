@@ -13,7 +13,9 @@
 
             <div>
                 <a th:href="@{/week/0}" class="pl-12">
-                    view
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                    Week view
+                    </button>
                 </a>
             </div>
 
@@ -32,7 +34,11 @@
             </div>
 
             <div>
-                <a th:href="@{/user/login}"> account</a>
+                <a th:href="@{/user/logout}" class="pr-12">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                        Logout
+                    </button>
+                </a>
             </div>
         </div>
 

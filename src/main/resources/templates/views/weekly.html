@@ -8,23 +8,7 @@
 
 <body class="p-4 bg-gray-100">
 
-    <div class="bg-white rounded-lg shadow-md pt-4 pb-2 -pl-12">
-        <div class="flex justify-between items-center mb-8 pl-12">
-            <div><a th:href="@{/month/0}" class="text-blue-500 hover:text-blue-700">View</a></div>
-            <div class="flex justify-center items-center">
-                <a th:href="@{/week/{weekOffset}(weekOffset=${weekOffset - 1})}">
-                    ←
-                </a>
-                <h2 class="text-lg font-bold px-6 w-72 text-center">
-                    Week of <span th:text="${#temporals.format(weekDays[0], 'dd MMM')}">Start Date</span> - <span th:text="${#temporals.format(weekDays[6], 'dd MMM')}">End Date</span>
-
-                </h2>
-                <a th:href="@{/week/{weekOffset}(weekOffset=${weekOffset + 1})}">
-                    →
-                </a>
-            </div>
-            <div><a th:href="@{/user/login}" class="text-blue-500 hover:text-blue-700">Account</a></div>
-        </div>
+    
 
         <div class="grid grid-cols-[1fr_3fr_3fr_3fr_3fr_3fr_3fr_3fr] pr-12 mb-2">
             <div></div>
@@ -59,7 +43,6 @@
                             <div th:if="${event.getEndTime().minusMinutes(30).equals(time)}" class="border-black border-b box-border h-0"></div>
                         </a>
                     </div>
-                
                 
                 </div>
 
