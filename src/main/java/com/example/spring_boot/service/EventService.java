@@ -30,4 +30,6 @@ public interface EventService {
 
     public List<ConflictGroup> getConflictMapping(Collection<Event> events);
 
+    public int currentDayInWeek(List<LocalDate> week);
+
 }

@@ -181,7 +181,7 @@ public class EventServiceImpl implements EventService  {
     @Override
     public List<LocalTime> getTimeList() {
         List<LocalTime> timeList = new ArrayList<>();
-        LocalTime time = LocalTime.of(8, 0);
+        LocalTime time = LocalTime.of(7, 0);
         LocalTime endTime = LocalTime.of(22, 0);
 
         while (!time.equals(endTime)) {
@@ -248,7 +248,6 @@ public class EventServiceImpl implements EventService  {
             return conflictGroups;
         }
 
-
         for (int i = 1; i < eventsList.size(); ++i) {
             
             Event event = eventsList.get(i);
@@ -271,6 +270,19 @@ public class EventServiceImpl implements EventService  {
         }
     
         return conflictGroups; 
+    }
+
+    public int currentDayInWeek(List<LocalDate> week) {
+
+        int currDay = 0;
+
+        for (int i = 0; i < week.size(); ++i) {
+            if (week.get(i).equals(LocalDate.now())) {
+                currDay = i;
+            }
+        }
+
+        return currDay;
     }
 
 

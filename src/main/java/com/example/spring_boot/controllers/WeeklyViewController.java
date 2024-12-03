@@ -44,6 +44,7 @@ public class WeeklyViewController {
         LocalDate startOfWeek = service.getStartOfWeek(LocalDate.now().plusWeeks(weekOffset));
 
         List<LocalDate> daysOfWeek = service.getDaysOfWeek(startOfWeek);
+        int currentDay = service.currentDayInWeek(daysOfWeek);
 
         List<LocalTime> timeList = service.getTimeList();
 
@@ -60,21 +61,6 @@ public class WeeklyViewController {
             weekConflictGroups.add(conflictGroups);
         }
         
-        
-
-        for (List<ConflictGroup> conflictGroups : weekConflictGroups) {
-            
-            
-            for (ConflictGroup conflictGroup : conflictGroups) {
-
-                for (SubGroup subGroups : conflictGroup.getSubGroups()) {
-
-                    for (Event event : subGroups.getEvents()) {
-                    }
-                }
-            
-            }
-        }
 
         HashMap<Event, int[]> eventMap = new HashMap<>();
 
@@ -122,6 +108,7 @@ public class WeeklyViewController {
         model.addAttribute("timeSlots", timeList);
         model.addAttribute("weekDays", daysOfWeek); 
         model.addAttribute("eventMap", eventMap);
+        model.addAttribute("currentDay", currentDay);
 
         return "views/weeklynew";
     }
