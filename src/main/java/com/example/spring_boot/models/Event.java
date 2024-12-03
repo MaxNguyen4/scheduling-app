@@ -104,7 +104,7 @@ public class Event {
 
         int row = 0;
 
-        LocalTime timeSlot = LocalTime.of(7, 0);
+        LocalTime timeSlot = LocalTime.of(6, 0);
 
         while (!startTime.equals(timeSlot)) {
             timeSlot = timeSlot.plusMinutes(30);

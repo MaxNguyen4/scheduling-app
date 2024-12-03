@@ -61,7 +61,7 @@ public class EventsController {
 	}
 
 	@GetMapping("/add")
-	public String addEvent(@RequestParam LocalDate date, @RequestParam int monthOffset, Model model, HttpSession session, HttpServletRequest request) {
+	public String addEvent(@RequestParam LocalDate date, Model model, HttpSession session, HttpServletRequest request) {
 
 		String referer = request.getHeader("Referer");
 		if (referer != null) {
@@ -74,7 +74,7 @@ public class EventsController {
 		event.setEndTime(LocalTime.of(11, 59));
 
 		model.addAttribute("event", event);
-		model.addAttribute("monthOffset", monthOffset);
+		model.addAttribute("previousPage", request.getSession().getAttribute("previousPage"));
 
 		return "event/add-event";
 	}
