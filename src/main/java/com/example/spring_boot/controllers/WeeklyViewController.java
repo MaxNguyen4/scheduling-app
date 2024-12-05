@@ -102,15 +102,12 @@ public class WeeklyViewController {
 
         }
 
-        
-
-        
         model.addAttribute("timeSlots", timeList);
         model.addAttribute("weekDays", daysOfWeek); 
         model.addAttribute("eventMap", eventMap);
         model.addAttribute("currentDay", currentDay);
 
-        return "views/weeklynew";
+        return "views/weekly";
     }
     
 }
