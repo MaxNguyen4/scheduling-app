@@ -7,13 +7,58 @@
 
 <body>
 
-    <header class="bg-emerald-600 text-white py-12 text-center">
+    <header class="bg-green-200 text-green-800 py-8 text-center">
 
-        <h1 class="text-4xl font-bold mb-4">Welcome to SmartScheduler</h1>
-            <p class="text-lg mb-6">Plan your day, week, and month effortlessly with our smart scheduling app.</p>
-            <a href="#features" class="bg-white text-blue-500 px-6 py-2 rounded-md shadow-md hover:bg-gray-100">Get Started</a>
+        <h1 class="text-4xl font-bold mb-4">Welcome to Stinky Scheduler !!</h1>
+            <p class="text-lg mb-6">Plan your days, weeks, and months effortlessly with the smelliest scheduling app.</p>
+            <a th:href="@{user/login}" class="bg-white text-green-800 px-6 py-2 rounded-md shadow-md hover:bg-gray-100">Get Started</a>
 
     </header>
+
+    <section class="text-center pt-4 text-green-800">
+
+        <h2 class="text-2xl font-bold">How it works:</h2>
+
+        <div class="flex justify-evenly py-6 text-4xl font-bold">
+            <div>
+                <p>1</p>
+                <p class="text-lg"> Sign up </p>
+                <p class="text-lg font-normal"> Create your own account to get started. </p>
+            </div>
+
+            <div>
+                <p>2</p>
+                <p class="text-lg"> Add events </p>
+                <p class="text-lg font-normal"> Input events into ___'s system </p>
+
+            </div>
+
+            <div>
+                <p>3</p>
+                <p class="text-lg"> Organise yourself ! </p>
+                <p class="text-lg font-normal"> Visualise your schedule in weekly and</p>
+                <p class="text-lg font-normal">  monthly views to stay organised ! </p>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="grid grid-cols-2">
+
+        <div class="px-12">
+            <img src="/images/Weekly.png">
+        </div>
+
+        <div class="px-12">
+            <img src="/images/Monthly.png">
+
+
+        </div>
+
+    </section>
     
 
 
