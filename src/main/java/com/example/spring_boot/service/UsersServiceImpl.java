@@ -22,11 +22,26 @@ public class UsersServiceImpl {
 
     public void createAccount(String username, String password) {
 
+        username = username.toLowerCase();
+
         UserBuilder userBuilder = User.withUsername(username)
                                     .password(password)
                                     .roles("USER");
 
         userDetailsManager.createUser(userBuilder.build());
+    }
+
+    public boolean findByUsername(String username) {
+
+        Users user = repository.findByUsername(username);
+
+        if (user == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+
     }
 
 

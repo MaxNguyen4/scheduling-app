@@ -48,7 +48,7 @@ public class SecurityConfig {
             )
             .logout(logout -> logout
                 .logoutUrl("/user/logout")
-                .logoutSuccessUrl("/user/login?logout=true")
+                .logoutSuccessUrl("/")
                 .permitAll()
             )
             .httpBasic(withDefaults())

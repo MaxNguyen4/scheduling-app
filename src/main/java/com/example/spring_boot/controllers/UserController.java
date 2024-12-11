@@ -40,13 +40,32 @@ public class UserController {
 	}
 
 	@PostMapping("/create-account")
-	public String createAccount(@ModelAttribute("user") Users user, @RequestParam("confirmPassword") String confirmPassword) {
+	public String createAccount(@ModelAttribute("user") Users user, @RequestParam("confirmPassword") String confirmPassword, Model model) {
 
-		System.out.println(confirmPassword);
+		if (confirmPassword.equals(user.getPassword())) {
 
-		service.createAccount(user.getUsername(), user.getPassword());
+
+			if (service.findByUsername(user.getUsername())) {
+				model.addAttribute("error", "Username already exists");
+				return "user/create-account";
+			}
+			else {
+				service.createAccount(user.getUsername(), user.getPassword());
+			}
+
+		}
+		else {
+			model.addAttribute("error", "Passwords are not the same");
+			return "user/create-account";
+		}
+
 
 		return "user/login";
+	}
+
+	@GetMapping("/profile")
+	public String profile(Model model) {
+		return "user/profile";
 	}
 
 	/* 
