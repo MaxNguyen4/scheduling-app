@@ -11,9 +11,21 @@
     <div class="bg-white rounded-lg shadow-md pb-2">
         <div class="flex justify-between items-center mb-8 pl-12 pt-4">
             <div>
-                <a th:href="@{/month/0}" class="">
+                <a th:href="@{/day/0}">
                     <button class="border px-1 rounded-sm shadow-sm border-gray-300">
-                        Month view
+                    Today
+                    </button>
+                </a>
+
+                <a th:href="@{/week/0}" class="pl-2">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                    This Week
+                    </button>
+                </a>
+
+                <a th:href="@{/month/0}" class="pl-2">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                    This Month
                     </button>
                 </a>
             </div>
@@ -31,6 +43,12 @@
             </div>
 
             <div>
+                <a th:href="@{/user/logout}" class="pr-2 pl-28">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                        User
+                    </button>
+                </a>
+
                 <a th:href="@{/user/logout}" class="pr-12">
                     <button class="border px-1 rounded-sm shadow-sm border-gray-300">
                         Logout

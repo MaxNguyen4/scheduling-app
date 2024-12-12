@@ -230,6 +230,7 @@ public class EventServiceImpl implements EventService  {
         return events;
     }
 
+    @Override
     public List<ConflictGroup> getConflictMapping(Collection<Event> events) {
 
         List<Event> eventsList = (events instanceof List)
@@ -272,6 +273,7 @@ public class EventServiceImpl implements EventService  {
         return conflictGroups; 
     }
 
+    @Override
     public int currentDayInWeek(List<LocalDate> week) {
 
         int currDay = 0;
@@ -284,6 +286,19 @@ public class EventServiceImpl implements EventService  {
 
         return currDay;
     }
+
+    @Override
+    public List<Event> sortEvents(Collection<Event> events) {
+
+        List<Event> eventsList = (events instanceof List)
+            ? (List<Event>) events
+            : new ArrayList<>(events);
+
+        eventsList.sort(Comparator.comparing(Event::getStartTime));
+
+        return eventsList;
+    }
+
 
 
 }

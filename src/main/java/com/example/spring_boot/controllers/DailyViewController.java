@@ -14,6 +14,7 @@ import java.util.*;
 
 import com.example.spring_boot.models.*;
 import com.example.spring_boot.service.EventServiceImpl;
+import com.example.spring_boot.service.NotesServiceImpl;
 import com.example.spring_boot.util.SecurityUtils;
 
 import jakarta.servlet.http.HttpSession;
@@ -22,31 +23,35 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/day")
 public class DailyViewController {
 
-    private final EventServiceImpl service;
+    private final EventServiceImpl eventService;
     private final SecurityUtils securityUtils;
+    private final NotesServiceImpl notesService;
 
     @Autowired
-    public DailyViewController(EventServiceImpl service, SecurityUtils securityUtils) {
-        this.service = service;
+    public DailyViewController(EventServiceImpl eventService, SecurityUtils securityUtils, NotesServiceImpl notesService) {
+        this.eventService = eventService;
         this.securityUtils = securityUtils;
+        this.notesService = notesService;
     }
 
     @GetMapping("")
-    public String home(Model model) {
+    public String day(Model model, HttpSession session) {
+        return newDay(model, 0, session);
+    }
 
-        Long id = securityUtils.getAuthenticatedUserId();
+    @GetMapping("/{dayOffset}")
+    public String newDay(Model model, @PathVariable int dayOffset, HttpSession session) {
 
-        LocalDate date = LocalDate.of(2024,11,12);
-        Collection<Event> events = service.getEventsForDayByUserId(date, id);
-        List<LocalTime> timeList = service.getTimeList();
-        Collection<Event> roundedEvents = service.roundTime(events);
+        Long userId = securityUtils.getAuthenticatedUserId();
+        LocalDate date = LocalDate.now().plusDays(dayOffset);
+        Collection<Event> events = eventService.getEventsForDayByUserId(date, userId);
+        List<Event> sortedEvents = eventService.sortEvents(events);
+        Notes note = notesService.getNote(userId, date);
 
-        List<List<Event>> eventColumns = new ArrayList<>();
-
-        model.addAttribute("eventColumns", eventColumns);
-        model.addAttribute("timeList", timeList);
+        model.addAttribute("note", note);
+        model.addAttribute("events", sortedEvents);
+        model.addAttribute("date", date);
 
         return "views/daily";
-    }
-    
+    }    
 }

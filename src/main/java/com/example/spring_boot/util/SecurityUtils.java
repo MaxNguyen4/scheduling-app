@@ -17,9 +17,9 @@ public class SecurityUtils {
     public String getAuthenticatedUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
-            return authentication.getName(); // Returns the username
+            return authentication.getName();
         }
-        return null; // No authenticated user
+        return null;
     }
 
     public Long getAuthenticatedUserId() {

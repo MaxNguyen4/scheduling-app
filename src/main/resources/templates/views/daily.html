@@ -1,85 +1,115 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <meta charset="utf-8" content="width=device-width, initial-scale=1.0"> 
-    <link href="/css/tailwind.css" rel="stylesheet" >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/tailwind.css" rel="stylesheet">
 </head>
 
+<body class="p-4 bg-gray-100">
 
-<body class="bg-gray-100 p-4">
     <div class="bg-white rounded-lg shadow-md pb-2">
-
         <div class="flex justify-between items-center mb-8 pt-4">
-
             <div>
-                <a th:href="@{/week/0}" class="pl-12">
-                    view
+                <a th:href="@{/day/0}" class="pl-12">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                    Today
+                    </button>
+                </a>
+
+                <a th:href="@{/week/0}" class="pl-2">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                    This Week
+                    </button>
+                </a>
+
+                <a th:href="@{/month/0}" class="pl-2">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                    This Month
+                    </button>
                 </a>
             </div>
 
-            <div class="flex justify-center">
-                <a>
+            <div class="flex justify-center items-center">
+                <a th:href="@{/day/{dayOffset}(dayOffset=${dayOffset - 1})}">
                     ←
                 </a>
-
-                <h2 class="text-lg font-bold px-6 w-72 text-center">
+                <h2 class="text-lg font-bold px-6 w-72 text-center" th:text="${date}">
+                    
                 </h2>
-
-                <a>
+                <a th:href="@{/day/{dayOffset}(dayOffset=${dayOffset + 1})}">
                     →
                 </a>
             </div>
 
             <div>
-                <a th:href="@{/user/login}"> account</a>
+                <a th:href="@{/user/logout}" class="pr-2 pl-28">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                        User
+                    </button>
+                </a>
+
+                <a th:href="@{/user/logout}" class="pr-12">
+                    <button class="border px-1 rounded-sm shadow-sm border-gray-300">
+                        Logout
+                    </button>
+                </a>
             </div>
         </div>
 
-        <div class="grid grid-cols-[1fr_2fr]">
-            <div class="border-r border-black">
-                <div class="">
-                Should cover full height
-                </div>
+        <div class="grid grid-cols-2">
+
+            <div class="col-start-1 col-span-1 pl-4 pr-2">
+                <h1 class="text-center"> Day Notes </h1>
+                <form>
+
+                <textarea class="border border-gray-400 rounded-md shadow-sm w-full mt-4 resize-none bg-gray-100 outline-none p-2" rows="24"> </textarea>
+                </form>
             </div>
 
-            <div>
-                <!-- Outer container for all time and event rows -->
-                <div class="grid grid-rows-[repeat(28,_minmax(0,_1fr))]">
-                    
-                    <!-- Loop over each time entry, creating a new grid row for each -->
-                    <div th:each="time : ${timeList}" class="grid grid-cols-[1fr_5fr] items-center border-b">
-                        
-                        <!-- Time Column (fixed in the first column for each time) -->
-                        <div class="col-span-1 p-2 border-r border-black" th:text="${time}">
-                            <!-- Time entries display here -->
-                        </div>
-            
-                        <!-- Events Column (starts in the second column for each time) -->
-                        <div class="grid col-span-1 p-2" th:classappend="${'grid grid-cols-' + (eventColumns.size())}">
-                            <div th:each="eventColumn : ${eventColumns}">
-                                <div th:each="event : ${eventColumn}">
-                                    <!-- Display event only if its start time matches the current "time" -->
-                                    <div class="bg-green-200" th:if="${event.startTime.equals(time)}">
-                                        GAH
-                                    </div>
-                                </div>
+
+            <div class="pl-2 pr-4 h-4/6">
+
+                <h1 class="text-center pb-4"> Agenda </h1>
+
+
+                <div th:if="${events.size() == 0}" class="bg-blue-200 p-2 rounded-md shadow-sm text-blue-800 m-2">
+                    <p> Nothing planned for today !</p>
+                </div>
+
+                <a th:each="event : ${events}" th:href="@{'/events/' + ${event.id}}">
+                    <div class="bg-green-200 p-2 rounded-md shadow-sm text-green-800 m-2 hover:bg-green-300">
+
+
+                        <div class="flex justify-between">
+                            <h2 class="font-bold" th:text="${event.title}"></h2>
+                            <div class="flex">
+                                <p class="pr-2" th:text="${event.startTime}"></p>
+                                <p> - </p>
+                                <p class="pl-2" th:text="${event.endTime}"></p>
                             </div>
+
+
                         </div>
+
+            
+                        <p th:text="${event.details}"></p>
+
                     </div>
-                </div>
+                </a>
+                
+
+
             </div>
-            
-            
-  
+           
+
+           
 
 
         </div>
-        
-
-
     </div>
-</body>
 
+</body>
 </html>
+
+

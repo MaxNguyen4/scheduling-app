@@ -20,6 +20,7 @@ public interface EventService {
     public void updateEvent(Long id, String title, LocalDate date, LocalTime startTime, LocalTime endTime, String details);
     public void deleteEvent(Long id);
 
+    public Collection<Event> sortEvents(Collection<Event> events);
 
     public int getMonthOffset(Event event);
     public LocalDate getStartOfWeek(LocalDate date);
@@ -31,5 +32,6 @@ public interface EventService {
     public List<ConflictGroup> getConflictMapping(Collection<Event> events);
 
     public int currentDayInWeek(List<LocalDate> week);
+
 
 }

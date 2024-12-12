@@ -33,3 +33,11 @@ VALUES
 (1, 'Code Debugging Session', '2024-11-12', '11:00:00', '12:30:00', 'Resolve critical bugs'),
 (1, 'Afternoon Workshop', '2024-11-12', '13:30:00', '15:00:00', 'Hands-on workshop with the team'),
 (1, 'Clash Meeting', '2024-11-12', '14:00:00', '15:30:00', 'Overlapping event to test clash handling');
+
+
+INSERT INTO notes (user_id, note_date, details)
+VALUES 
+(1, '2024-12-12', 'notes'),
+(1, '2024-12-13', 'more notes'),
+(1, '2024-12-14', 'even more notes');
+
