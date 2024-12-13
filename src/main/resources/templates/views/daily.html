@@ -61,9 +61,14 @@
 
             <div class="col-start-1 col-span-1 pl-4 pr-2">
                 <h1 class="text-center"> Day Notes </h1>
-                <form>
 
-                <textarea class="border border-gray-400 rounded-md shadow-sm w-full mt-4 resize-none bg-gray-100 outline-none p-2" rows="24"> </textarea>
+                <form th:object="${note}" method="post" th:action="@{/day/editnote}" id="form">
+
+                    <textarea class="border border-gray-400 rounded-md shadow-sm w-full mt-4 resize-none bg-gray-100 outline-none p-2" rows="24" th:field="*{details}"> </textarea>
+                    <input hidden readonly th:field="*{userId}">
+                    <input hidden readonly th:field="*{date}">
+                    <button type="submit" class="bg-green-200 p-2 rounded-md shadow-sm text-green-800 hover:bg-green-300"> Add event</button>
+
                 </form>
             </div>
 
@@ -108,6 +113,47 @@
 
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('form');
+
+        function submitForm(targetHref) {
+            const formData = new FormData(form);
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('POST', form.action, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    if (targetHref) {
+                        window.location.href = targetHref;
+                    }
+                } else {
+                    console.error('Form submission failed:', xhr.statusText);
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('An error occurred during the form submission.');
+            };
+
+            xhr.send(formData);
+        }
+
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                const targetHref = event.target.closest('a').href;
+                submitForm(targetHref);
+            });
+        });
+
+        window.addEventListener('beforeunload', event => {
+            submitForm();
+        });
+    });
+
+    </script>
 
 </body>
 </html>

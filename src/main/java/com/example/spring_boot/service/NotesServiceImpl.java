@@ -22,6 +22,16 @@ public class NotesServiceImpl implements NotesService {
     }
 
 
+    @Override
+    public void updateNote(long userId, LocalDate date, String details) {
+        repository.updateNote(userId, date, details);
+    }
+
+    @Override
+    public void addNote(long userId, LocalDate date, String details) {
+        repository.addNote(userId, date, details);
+    }
+
 
 
     

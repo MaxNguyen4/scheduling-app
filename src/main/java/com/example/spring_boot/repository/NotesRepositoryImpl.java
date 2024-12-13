@@ -24,7 +24,7 @@ public class NotesRepositoryImpl implements NotesRepository{
     }
 
     
-     @Override
+    @Override
     public Notes getNote(long userId, LocalDate date) {
 
         Notes note = null;
@@ -50,6 +50,35 @@ public class NotesRepositoryImpl implements NotesRepository{
         }
 
         return note;
+
+    }
+
+    @Override
+    public void updateNote(Long userId, LocalDate date, String details) {
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("UPDATE notes SET details = ? WHERE user_id = ? AND note_date = ?")) {
+                stmt.setString(1, details);
+                stmt.setLong(2, userId);
+                stmt.setDate(3, java.sql.Date.valueOf(date));
+
+                stmt.executeUpdate();
+            
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void addNote(Long userId, LocalDate date, String details) {
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO notes (user_id, note_date, details) VALUES (?, ?, ?)")) {
+                stmt.setLong(1, userId);
+                stmt.setDate(2, java.sql.Date.valueOf(date));
+                stmt.setString(3, details);
+
+                stmt.executeUpdate();
+
+            } catch (SQLException e) {
+            }
 
     }
     
