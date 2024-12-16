@@ -1263,6 +1263,10 @@ video {
   grid-template-columns: 1fr 4fr 4fr 4fr 4fr 4fr 4fr 4fr;
 }
 
+.grid-cols-7 {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
 .items-center {
   align-items: center;
 }
