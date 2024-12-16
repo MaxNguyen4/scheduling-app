@@ -31,16 +31,11 @@ public class UsersServiceImpl {
         userDetailsManager.createUser(userBuilder.build());
     }
 
-    public boolean findByUsername(String username) {
+    public Users findByUsername(String username) {
 
         Users user = repository.findByUsername(username);
 
-        if (user == null) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return user;
 
     }
 

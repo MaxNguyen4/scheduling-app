@@ -8,6 +8,20 @@
 <body class="flex justify-center items-center min-h-screen bg-gray-100 w-full">
     <div class="bg-white p-12 rounded-lg shadow-md w-5/12">
         
+        <form th:action="@{/user/edit}" th:object="${user}" method="post">
+            <h2 class="text-2xl font-bold mb-4">User Details</h2>
+            
+            <p class="text-sm">Username:</p>
+            <input type="text" class="rounded-md shadow-sm p-2 border border-gray-300 w-full mt-1 text-sm" th:field="*{username}" readonly>
+
+            <p class="text-sm mt-2">Password:</p>
+            <input class="rounded-md shadow-sm p-2 border border-gray-300 w-full mt-1 text-sm" th:field="*{password}">
+
+            <div class="flex justify-between mt-8">
+                <button type="submit" class="bg-green-200 p-2 rounded-md shadow-sm text-green-800 hover:bg-green-300 w-24 text-sm">Save</button>
+                <a href="javascript:history.back()" class="rounded-md shadow-sm bg-gray-200 hover:bg-gray-300 p-2 w-24 text-center text-sm">Go Back</a>
+            </div>
+        </form>
     </div>
 </body>
 </html>

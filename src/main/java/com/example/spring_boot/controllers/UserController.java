@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import com.example.spring_boot.models.*;
 import com.example.spring_boot.service.UsersServiceImpl;
 import jakarta.servlet.http.HttpSession;
+import com.example.spring_boot.util.SecurityUtils;
 
 
 @Controller
@@ -14,10 +15,17 @@ import jakarta.servlet.http.HttpSession;
 public class UserController {
 
 	private final UsersServiceImpl service;
+	private final SecurityUtils securityUtils;
 
 	@Autowired
-	public UserController(UsersServiceImpl service) {
+	public UserController(UsersServiceImpl service, SecurityUtils securityUtils) {
 		this.service = service;
+		this.securityUtils = securityUtils;
+	}
+
+	@GetMapping("/")
+	public String user(Model model) {
+		return "user/profile";
 	}
 
 	@GetMapping("/login")
@@ -45,7 +53,7 @@ public class UserController {
 		if (confirmPassword.equals(user.getPassword())) {
 
 
-			if (service.findByUsername(user.getUsername())) {
+			if (service.findByUsername(user.getUsername()) != null) {
 				model.addAttribute("error", "Username already exists");
 				return "user/create-account";
 			}
@@ -65,7 +73,17 @@ public class UserController {
 
 	@GetMapping("/profile")
 	public String profile(Model model) {
+
+		String username = securityUtils.getAuthenticatedUsername();
+		Users user = service.findByUsername(username);
+
+		model.addAttribute("user", user);
 		return "user/profile";
+	}
+
+	@PostMapping("/edit")
+	public String edit(Model model) {
+		
 	}
 
 	/* 
