@@ -38,4 +38,19 @@ public class UserRepositoryImpl implements UserRepository{
         return user;
 
     }
+
+    @Override
+    public void changePassword(String username, String password) {
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("UPDATE users SET password = ? WHERE username = ?")) {
+                stmt.setString(1, password);
+                stmt.setString(2, username);
+
+                stmt.executeUpdate();
+            
+        } catch (Exception e) {
+        }
+    }
+
+    
 }

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import com.example.spring_boot.models.*;
 import com.example.spring_boot.service.UsersServiceImpl;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import com.example.spring_boot.util.SecurityUtils;
 
@@ -72,7 +74,12 @@ public class UserController {
 	}
 
 	@GetMapping("/profile")
-	public String profile(Model model) {
+	public String profile(Model model, HttpSession session, HttpServletRequest request) {
+
+		String referer = request.getHeader("Referer");
+		if (referer != null) {
+			request.getSession().setAttribute("previousPage", referer);
+		}
 
 		String username = securityUtils.getAuthenticatedUsername();
 		Users user = service.findByUsername(username);
@@ -82,8 +89,16 @@ public class UserController {
 	}
 
 	@PostMapping("/edit")
-	public String edit(Model model) {
-		
+	public String edit(Model model, @ModelAttribute("users") Users user, HttpServletRequest request) {
+
+
+		service.changePassword(user.getUsername(), user.getPassword());
+
+		String previousPage = (String) request.getSession().getAttribute("previousPage");
+    	request.getSession().removeAttribute("previousPage");
+
+		return previousPage != null ? "redirect:" + previousPage : "redirect:/month/0";
+
 	}
 
 	/* 

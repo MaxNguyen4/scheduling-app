@@ -608,3 +608,6 @@ DROP TABLE IF EXISTS users [90107-224]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+2024-12-18 20:46:39.249601+11:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "AUTHORITIES" not found; SQL statement:
+insert into authorities (username, authority) values (?,?) [42102-224]

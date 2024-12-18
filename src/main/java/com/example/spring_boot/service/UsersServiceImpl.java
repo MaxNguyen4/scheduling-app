@@ -39,6 +39,7 @@ public class UsersServiceImpl {
 
     }
 
-
-    
+    public void changePassword(String username, String password) {
+        repository.changePassword(username, password);
+    }
 }
