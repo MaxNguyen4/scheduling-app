@@ -71,7 +71,7 @@ public class EventsController {
 		Event event = new Event();
 		event.setDate(date);
 		event.setStartTime(LocalTime.of(0, 0));
-		event.setEndTime(LocalTime.of(11, 59));
+		event.setEndTime(LocalTime.of(23, 59));
 
 		model.addAttribute("event", event);
 		model.addAttribute("previousPage", request.getSession().getAttribute("previousPage"));

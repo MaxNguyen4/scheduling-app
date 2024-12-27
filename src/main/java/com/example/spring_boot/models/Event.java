@@ -90,7 +90,27 @@ public class Event {
     public int getRowSpan() {
         int span = 0;
 
+      
+        
+
         LocalTime tempTime = startTime;
+
+        // before 8 
+        if (startTime.isBefore(LocalTime.of(8,0))) {
+            span = 2;
+            tempTime = LocalTime.of(8, 0);
+        }
+
+        // After 11
+        if (endTime.isAfter(LocalTime.of(23,0))) {
+            span = 2;
+
+            if (startTime.isBefore(LocalTime.of(8,0))) {
+                span = 4;
+            }
+
+            endTime = LocalTime.of(23, 0);
+        }
 
         while (!tempTime.equals(endTime)) {
             tempTime = tempTime.plusMinutes(30);
@@ -104,7 +124,17 @@ public class Event {
 
         int row = 0;
 
-        LocalTime timeSlot = LocalTime.of(6, 0);
+        LocalTime timeSlot = LocalTime.of(7, 0);
+
+        // Before 8
+        if (startTime.isBefore(LocalTime.of(8,0))) {
+            return 0;
+        }
+
+        // After 11
+        if (startTime.isAfter(LocalTime.of(23,0))) {
+            return 35;
+        }
 
         while (!startTime.equals(timeSlot)) {
             timeSlot = timeSlot.plusMinutes(30);

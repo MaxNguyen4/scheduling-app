@@ -181,7 +181,7 @@ public class EventServiceImpl implements EventService  {
     @Override
     public List<LocalTime> getTimeList() {
         List<LocalTime> timeList = new ArrayList<>();
-        LocalTime time = LocalTime.of(6, 0);
+        LocalTime time = LocalTime.of(8, 0);
         LocalTime endTime = LocalTime.of(23, 0);
 
         while (!time.equals(endTime)) {
