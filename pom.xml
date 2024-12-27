@@ -11,10 +11,10 @@
 	</parent>
 
 	<groupId>au.edu.rmit.sept</groupId>
-	<artifactId>webapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>calendarApp</artifactId>
+	<version>0.0.1</version>
 	<name>webapp</name>
-	<description>COSC2299 SEPT WebApplication</description>
+	<description>Calendar WebApplication</description>
 
 	<properties>
 		<java.version>17</java.version>
