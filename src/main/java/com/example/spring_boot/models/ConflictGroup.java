@@ -67,10 +67,11 @@ public class ConflictGroup {
         LocalTime startTime = event.getStartTime();
         LocalTime endTime = event.getEndTime();
 
-        // 4 clash cases
 
-        // 8 12 14 15
+
         // TODO: IF EVENTS ARE SORTED BY TIME START, UNNECESSARY CODE CAN BE REMOVED
+
+        // 4 clash cases
     
         // left side overlap from min max 
         if (startTime.isBefore(minTime) && endTime.isAfter(minTime)) {
@@ -91,12 +92,15 @@ public class ConflictGroup {
 
         }
 
-        // perfect overlap or tiny overlap inside min max
-        if ((startTime.equals(minTime) && endTime.equals(maxTime)) || (startTime.isAfter(minTime) && endTime.isBefore(maxTime))) {
+        // tiny overlap inside min max
+        if ((startTime.isAfter(minTime) && endTime.isBefore(maxTime))) {
             result = true;
-
         }
 
+        // same start or same end
+        if ((startTime.equals(minTime) || endTime.equals(maxTime))) {
+            result = true;
+        }
 
 
         if (!result) {
